@@ -563,7 +563,8 @@ public class Knife {
     private static void findGainApiAnnotation(Object target) {
         try {
             String name = target.getClass().getName();
-            String path = name.replace(".", "_") + "_GainApiLoader";
+            String key = name.substring(0, name.lastIndexOf("."));
+            String path = key + "." + name.replace(".", "_") + "_GainApiLoader";
             Class<?> aClass = Class.forName(path);
             Object instance = aClass.newInstance();
             Method getNames = aClass.getDeclaredMethod("getNames");
@@ -597,6 +598,7 @@ public class Knife {
                 String field = (String) name;
                 Field declaredField = aClass.getDeclaredField(field);
                 declaredField.setAccessible(true);
+                Loog.methodE(field+"  :  "+declaredField.getType().getName());
                 Object api = GainHttp.api(declaredField.getType());
                 if (api != null) {
                     boolean isStatic = Modifier.isStatic(declaredField.getModifiers());
@@ -605,6 +607,8 @@ public class Knife {
                     } else {
                         declaredField.set(target, api);
                     }
+                } else {
+                    Loog.methodE("api = null ");
                 }
             }
         } catch (NoSuchFieldException e) {

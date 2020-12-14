@@ -3,6 +3,7 @@ package com.wxl.aptmvp;
 import android.app.Application;
 
 import com.wxl.mvp.GainNote;
+import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.lifecycle.AppLifecycle;
 import com.wxl.mvp.util.Loog;
 
@@ -27,5 +28,8 @@ public class App extends Application {
                 Loog.e("app onBackground");
             }
         },true);
+        GainHttp.option().api(Api.class)
+                .baseUrl("http://www.baidu.com")
+                .build();
     }
 }

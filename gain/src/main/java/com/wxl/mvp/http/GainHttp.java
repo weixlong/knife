@@ -423,6 +423,7 @@ public class GainHttp {
          * 构建Retrofit
          */
         public void build() {
+            Loog.methodE("put api : "+apiClass.getName());
             Instance.api.put(apiClass, createApi(apiClass, BASE_URL));
             ExceptionHandler.exceptionCallback(exceptionCallback);
         }

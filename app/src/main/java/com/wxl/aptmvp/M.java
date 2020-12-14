@@ -11,11 +11,15 @@ import com.wxl.mvp.util.Loog;
  */
 public class M {
 
-    @GainApi()
+    @GainApi
     Api api;
 
     @GainLifecycle(life = MainActivity.class)
     public void loadApk(){
         Loog.methodE("M create success");
+        if(api != null) {
+            Loog.methodE("loadApk");
+            api.loadConfig("Home.Config");
+        }
     }
 }
