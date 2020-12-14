@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">apt-mvp</string>
+    <string name="M">com.wxl.aptmvp.M</string>
+    <string name="V">com.wxl.aptmvp.V</string>
+</resources>

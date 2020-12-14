@@ -1,0 +1,4 @@
+include ':apt-annotation', ':gain'
+include ':compile-processor'
+include ':app'
+rootProject.name = "apt-mvp"
