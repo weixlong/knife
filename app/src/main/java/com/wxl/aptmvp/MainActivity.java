@@ -64,6 +64,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
+        //如：TwoActivity 与 MainActivity 同时指定了P这个对象，在TwoActivity unBind释放后，
+        //P中的m字段及M类中包含的@Gain类注解字段都将会被设置为空，
+        //如需要恢复这些值，则需要调用该方法
         //GainKnife.onResumeWhenTargetReleased(getClass());
         super.onResume();
     }
