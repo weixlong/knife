@@ -232,15 +232,6 @@ public class GainHttp {
     }
 
 
-    /**
-     * 默认描述者
-     *
-     * @param callback
-     * @return DefaultSubscriber
-     */
-    public <T> DefaultSubscriber<T> getDefaultSubscriber(Callback<T> callback) {
-        return DefaultSubscriber.newInstance(callback);
-    }
 
     /**
      * 返回简单描述者
@@ -258,8 +249,6 @@ public class GainHttp {
         private static int HTTP_CONNECT_OUT_TIME = 10;
 
         private static String BASE_URL = "";
-
-        private static int SUCCESS_CODE = 0;
 
         private OkHttpClient.Builder builder;
 
@@ -335,7 +324,6 @@ public class GainHttp {
          */
         public Option addNetworkInterceptor(Interceptor interceptor) {
             builder.addNetworkInterceptor(interceptor);
-            SmartView.option().addNetworkInterceptor(interceptor);
             return this;
         }
 
@@ -422,10 +410,10 @@ public class GainHttp {
         /**
          * 构建Retrofit
          */
-        public void build() {
-            Loog.methodE("put api : "+apiClass.getName());
+        public Option build() {
             Instance.api.put(apiClass, createApi(apiClass, BASE_URL));
             ExceptionHandler.exceptionCallback(exceptionCallback);
+            return this;
         }
 
 
@@ -455,16 +443,7 @@ public class GainHttp {
         }
 
 
-        /**
-         * 成功码 默认为0
-         *
-         * @param code
-         * @return Option
-         */
-        public Option okCode(int code) {
-            SUCCESS_CODE = code;
-            return this;
-        }
+
 
         /**
          * 超时时间
@@ -509,15 +488,6 @@ public class GainHttp {
             return exceptionCallback;
         }
 
-
-        /**
-         * 获取成功码
-         *
-         * @return SuccessCode
-         */
-        public static int getSuccessCode() {
-            return SUCCESS_CODE;
-        }
     }
 
 

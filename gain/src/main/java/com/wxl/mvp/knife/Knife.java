@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.wxl.mvp.GainKnife;
-import com.wxl.mvp.GainNote;
 import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.http.HttpLifecycleUser;
 import com.wxl.mvp.lifecycle.GainActivityLifecycle;
@@ -77,11 +76,17 @@ public class Knife {
             }
 
         } catch (IllegalAccessException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (NoSuchMethodException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (InvocationTargetException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         }
     }
 
@@ -99,11 +104,17 @@ public class Knife {
             Class<?> aClass = Class.forName(target.substring(0, target.lastIndexOf(".")) + "." + path);
             return aClass.newInstance();
         } catch (ClassNotFoundException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (IllegalAccessException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (InstantiationException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         }
         return null;
     }
@@ -155,11 +166,17 @@ public class Knife {
             }
 
         } catch (IllegalAccessException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (NoSuchMethodException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (InvocationTargetException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         }
     }
 
@@ -231,11 +248,17 @@ public class Knife {
             }
 
         } catch (IllegalAccessException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (NoSuchMethodException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (InvocationTargetException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         }
     }
 
@@ -325,9 +348,13 @@ public class Knife {
                     }
                 }
             } catch (NoSuchFieldException e) {
-                Loog.expection(e);
+                if(Loog.TEST_DEBUG) {
+                    Loog.expection(e);
+                }
             } catch (IllegalAccessException e) {
-                Loog.expection(e);
+                if(Loog.TEST_DEBUG) {
+                    Loog.expection(e);
+                }
             }
         }
     }
@@ -408,9 +435,13 @@ public class Knife {
             try {
                 return aClass.newInstance();
             } catch (IllegalAccessException e) {
-                Loog.expection(e);
+                if(Loog.TEST_DEBUG) {
+                    Loog.expection(e);
+                }
             } catch (InstantiationException e) {
-                Loog.expection(e);
+                if(Loog.TEST_DEBUG) {
+                    Loog.expection(e);
+                }
             }
         }
         return null;
@@ -427,8 +458,8 @@ public class Knife {
         try {
             return Class.forName(target.getId());
         } catch (ClassNotFoundException e) {
-            if (GainNote.isDebug()) {
-                e.printStackTrace();
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
             }
         }
         return null;
@@ -572,15 +603,25 @@ public class Knife {
             ArrayList names = (ArrayList) getNames.invoke(instance);
             setTargetGainApiValue(target, names);
         } catch (ClassNotFoundException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (IllegalAccessException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (InstantiationException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (NoSuchMethodException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         } catch (InvocationTargetException e) {
-            Loog.expection(e);
+            if(Loog.TEST_DEBUG) {
+                Loog.expection(e);
+            }
         }
     }
 
@@ -612,9 +653,13 @@ public class Knife {
                 }
             }
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 }

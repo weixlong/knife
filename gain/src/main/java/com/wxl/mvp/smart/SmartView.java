@@ -67,6 +67,8 @@ public class SmartView<T> extends SmartRefreshLayout {
 
     private String beanName;
 
+    private String TAG ;
+
     public SmartView(Context context) {
         this(context, null);
     }
@@ -90,6 +92,7 @@ public class SmartView<T> extends SmartRefreshLayout {
             int p = typedArray.getIndex(R.styleable.SmartView_start_page);
             start_page_index = p;
             page = p;
+            TAG = String.valueOf(System.currentTimeMillis());
             typedArray.recycle();
         }
     }
@@ -303,7 +306,7 @@ public class SmartView<T> extends SmartRefreshLayout {
      */
     private void onPostRequest() {
         OkGo.post(url)
-                .tag(url)
+                .tag(TAG)
                 .writeTimeOut(GainHttp.Option.getHttpConnectOutTime() * 1000)
                 .readTimeOut(GainHttp.Option.getHttpConnectOutTime() * 1000)
                 .connTimeOut(GainHttp.Option.getHttpConnectOutTime() * 1000)
@@ -343,7 +346,7 @@ public class SmartView<T> extends SmartRefreshLayout {
         HttpParams httpParams = new HttpParams();
         httpParams.put(params);
         OkGo.get(url)
-                .tag(url)
+                .tag(TAG)
                 .writeTimeOut(GainHttp.Option.getHttpConnectOutTime() * 1000)
                 .readTimeOut(GainHttp.Option.getHttpConnectOutTime() * 1000)
                 .connTimeOut(GainHttp.Option.getHttpConnectOutTime() * 1000)
@@ -372,6 +375,7 @@ public class SmartView<T> extends SmartRefreshLayout {
                     }
                 });
     }
+
 
 
     /**
@@ -509,8 +513,8 @@ public class SmartView<T> extends SmartRefreshLayout {
      * 销毁
      */
     private void onDestroy() {
-        if(!TextUtils.isEmpty(url)) {
-            OkGo.getInstance().cancelTag(url);
+        if(!TextUtils.isEmpty(TAG)) {
+            OkGo.getInstance().cancelTag(TAG);
         }
         start_page_index = 0;
         page = 0;
