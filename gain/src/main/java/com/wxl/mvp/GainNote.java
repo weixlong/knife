@@ -45,7 +45,7 @@ public class GainNote {
      * @param context 上下文
      *
      */
-    public static void init(Context context, GainHttp.Option option){
+    public static void init(Context context, GainHttp.Option... option){
         init(context,debug,null,option);
     }
 
@@ -54,7 +54,7 @@ public class GainNote {
      * @param context 上下文
      * @param debug 是否打开调试模式
      */
-    public static void init(Context context,boolean debug,GainHttp.Option option){
+    public static void init(Context context,boolean debug,GainHttp.Option... option){
        init(context,debug,null,option);
     }
 
@@ -64,7 +64,7 @@ public class GainNote {
      * @param debug 是否打开调试模式
      * @param lifecycle APP 前后台回调
      */
-    public static void init(Context context,boolean debug,AppLifecycle lifecycle,GainHttp.Option option){
+    public static void init(Context context,boolean debug,AppLifecycle lifecycle,GainHttp.Option... option){
         GainNote.context = context;
         addApplicationActivityCallback(lifecycle);
         GainNote.debug = debug;

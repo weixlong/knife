@@ -17,6 +17,8 @@ public class App extends Application {
         super.onCreate();
         GainNote.init(this, GainHttp.option().api(Api.class)
                 .baseUrl("https://api.xuanjige.net")
+                .build(), GainHttp.option().api(Api.class)
+                .baseUrl("https://api.xuanjige.net")
                 .build());
     }
 }
