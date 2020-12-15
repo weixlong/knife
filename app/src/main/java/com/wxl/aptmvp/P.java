@@ -39,7 +39,7 @@ public class P extends AP implements GainActivityLifecycle {
 
     @Override
     public void onDestroy() {
-        Loog.e("onPause");
+        Loog.e("onDestroy");
     }
 
     @Override

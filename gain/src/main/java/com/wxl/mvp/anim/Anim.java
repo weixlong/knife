@@ -45,6 +45,18 @@ public class Anim {
         }
     }
 
+    private static void detach(Context context){
+        if (!animFragments.containsKey(context.getClass().getName())) return;
+        if (context instanceof RxAppCompatActivity) {
+            AnimFragment fragment = animFragments.get(context.getClass().getName());
+            if(fragment != null){
+                RxAppCompatActivity appCompatActivity = (RxAppCompatActivity) context;
+                FragmentTransaction transaction = appCompatActivity.getSupportFragmentManager().beginTransaction();
+                transaction.detach(fragment).commitAllowingStateLoss();
+            }
+        }
+    }
+
     public static Builder with(View target) {
         generateAnimFragment(target.getContext());
         if (target.getTag(R.id.anim_view_id) == null) {
@@ -126,6 +138,7 @@ public class Anim {
             set.reset();
             set.getAnimations().clear();
             if (target != null) {
+                detach(target.getContext());
                 if(animFragments.containsKey(target.getContext().getClass().getName())) {
                     animFragments.get(target.getContext().getClass().getName()).removeBuilder(target);
                     animFragments.remove(target.getContext().getClass().getName());

@@ -12,12 +12,13 @@ import com.wxl.mvp.util.Loog;
  * create user : wxl
  * subscribe :
  */
+@GainLifecycle(life = MainActivity.class,event = ApiEvent.STOP)
 public class M {
 
     @GainApi
     Api api;
 
-    @GainLifecycle(life = MainActivity.class,event = ApiEvent.STOP)
+    @GainLifecycle(life = MainActivity.class,event = ApiEvent.DESTROY)
     public void loadApk(){
         if(api != null) {
             GainHttp.load(api.loadConfig("Home.getConfig"), new Callback<String>() {

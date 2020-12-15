@@ -2,7 +2,9 @@ package com.wxl.mvp.knife;
 
 import com.wxl.mvp.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * create file time : 2020/12/9
@@ -14,6 +16,8 @@ public class KnifeContainer {
     private static HashMap<String, HashMap<String, HashMap<String, Target>>> fieldContainer = new HashMap<>();
     private static HashMap<String, Target> unSupportConstructorContainer = new HashMap<>();
     private static HashMap<String, Object> registerObjectContainer = new HashMap<>();
+    private static HashMap<String, List<Class>> registerRelatedPool = new HashMap<>();
+    private  Class mainClass = null;
 
 
     private static class KC {
@@ -25,6 +29,30 @@ public class KnifeContainer {
 
     public static KnifeContainer getInstance() {
         return KC.container;
+    }
+
+    /**
+     * 设置当前绑定的class
+     * @param mainClass
+     */
+    public void setMainClass(Class mainClass){
+        this.mainClass = mainClass;
+    }
+
+    /**
+     * 添加关联class
+     * @param
+     * @param related
+     */
+    public void addRelated(Class related){
+        if(mainClass == null) return;
+        if(!registerRelatedPool.containsKey(mainClass.getName())){
+            registerRelatedPool.put(mainClass.getName(),new ArrayList<>());
+        }
+        List<Class> list = registerRelatedPool.get(mainClass.getName());
+        if(!list.contains(related)) {
+            list.add(related);
+        }
     }
 
 
@@ -152,6 +180,25 @@ public class KnifeContainer {
         return getContainer(name, "FieldLoader");
     }
 
+
+    /**
+     * 找方法上的Lifecycle注解
+     * @param name
+     * @return
+     */
+    public HashMap<String,Target> getMethodLifecycleLoader(String name){
+        return getContainer(name,"MethodLifecycleLoader");
+    }
+
+    /**
+     * 找类上的Lifecycle注解
+     * @param name
+     * @return
+     */
+    public HashMap<String,Target> getTypeLifecycleLoader(String name){
+        return  getContainer(name, "TypeLifecycleLoader");
+    }
+
     /**
      * 从field里面找具有target.obj的对象
      *
@@ -230,17 +277,37 @@ public class KnifeContainer {
      * @param name
      */
     public void remove(String name) {
+        removeUnSupport(name);
+        boolean re = registerObjectContainer.containsKey(name);
+        if (re) {
+            Object remove = registerObjectContainer.remove(name);
+            if(remove != null) {
+                Knife.releaseGainClassKnife(remove);
+            }
+        }
         boolean containsKey = fieldContainer.containsKey(name);
         if (containsKey) {
             fieldContainer.remove(name);
         }
-        removeUnSupport(name);
-        boolean re = registerObjectContainer.containsKey(name);
-        if (re) {
-            registerObjectContainer.remove(name);
-        }
     }
 
+
+    /**
+     * 移除改类下的所有关联
+     * @param cls
+     */
+    public void unRelated(String cls){
+        boolean b = registerRelatedPool.containsKey(cls);
+        if(b){
+            remove(cls);
+            List<Class> list = registerRelatedPool.get(cls);
+            if(CollectionUtils.isNotEmpty(list)){
+                for (Class aClass : list) {
+                    remove(aClass.getName());
+                }
+            }
+        }
+    }
 
     /**
      * 移除一个不可以被无参构造初始化的对象
@@ -250,7 +317,10 @@ public class KnifeContainer {
     public void removeUnSupport(String name) {
         boolean b = unSupportConstructorContainer.containsKey(name);
         if (b) {
-            unSupportConstructorContainer.remove(name);
+            Target remove = unSupportConstructorContainer.remove(name);
+            if(remove != null && remove.getTarget() != null){
+                Knife.releaseGainClassKnife(remove.getTarget());
+            }
         }
     }
 

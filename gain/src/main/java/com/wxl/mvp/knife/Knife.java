@@ -11,6 +11,7 @@ import com.wxl.mvp.lifecycle.GainDialogLifecycle;
 import com.wxl.mvp.lifecycle.GainFragmentLifecycle;
 import com.wxl.mvp.lifecycle.GainPopLifecycle;
 import com.wxl.mvp.lifecycle.Lifecycle;
+import com.wxl.mvp.util.CollectionUtils;
 import com.wxl.mvp.util.Loog;
 
 import java.lang.reflect.Field;
@@ -46,6 +47,7 @@ public class Knife {
             findGainLifeMethodByTarget(target);
             findGainApiAnnotation(target);
             findTargetFieldSetValue(target.getClass());
+            KnifeContainer.getInstance().addRelated(target.getClass());
         }
     }
 
@@ -639,7 +641,6 @@ public class Knife {
                 String field = (String) name;
                 Field declaredField = aClass.getDeclaredField(field);
                 declaredField.setAccessible(true);
-                Loog.methodE(field+"  :  "+declaredField.getType().getName());
                 Object api = GainHttp.api(declaredField.getType());
                 if (api != null) {
                     boolean isStatic = Modifier.isStatic(declaredField.getModifiers());
@@ -661,5 +662,110 @@ public class Knife {
                 e.printStackTrace();
             }
         }
+    }
+
+
+    /**
+     * 找对应的class
+     * @param target
+     * @param name
+     * @return
+     */
+    private static Class findGainClass(Class target,String name){
+        String path = target.getName().replace(".", "_") + "_" + name;
+        try {
+            return Class.forName(target.getName().substring(0, target.getName().lastIndexOf(".")) + "." + path);
+        } catch (ClassNotFoundException e) {
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 释放
+     * @param target
+     */
+    public static void releaseGainClassKnife(Object target){
+        releaseGainField(target);
+        releaseGainApi(target);
+    }
+
+    /**
+     * 释放类上的注解@GainLifecycle
+     * @param target
+     */
+    private static void releaseGainField(Object target){
+        HashMap<String, Target> map = KnifeContainer.getInstance().getFieldTargets(target.getClass().getName());
+        if(CollectionUtils.isNotEmpty(map)){
+            Iterator<Map.Entry<String, Target>> iterator = map.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Target> next = iterator.next();
+                String name = next.getValue().getName();
+                if(!TextUtils.isEmpty(name)){
+                    try {
+                        Field declaredField = target.getClass().getDeclaredField(name);
+                        declaredField.setAccessible(true);
+                        declaredField.set(target,null);
+                        Loog.methodE("target : "+target.getClass().getName()+" field : "+name);
+                    } catch (NoSuchFieldException e) {
+                        if(Loog.TEST_DEBUG) {
+                            e.printStackTrace();
+                        }
+                    } catch (IllegalAccessException e) {
+                        if(Loog.TEST_DEBUG) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 释放GainApi注解
+     * @param target
+     */
+    private static void releaseGainApi(Object target){
+        try {
+            Class gainClass = findGainClass(target.getClass(), "GainApiLoader");
+            if(gainClass != null) {
+                Object instance = gainClass.newInstance();
+                Method getNames = gainClass.getDeclaredMethod("getNames");
+                getNames.setAccessible(true);
+                ArrayList names = (ArrayList) getNames.invoke(instance);
+                if (CollectionUtils.isNotEmpty(names)) {
+                    for (Object name : names) {
+                        Field declaredField = target.getClass().getDeclaredField((String) name);
+                        declaredField.setAccessible(true);
+                        declaredField.set(target,null);
+                        Loog.methodE("target : "+target.getClass().getName()+" field : "+name);
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
+        } catch (InstantiationException e) {
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchMethodException e) {
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
+        } catch (InvocationTargetException e) {
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
+        } catch (NoSuchFieldException e) {
+            if(Loog.TEST_DEBUG) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

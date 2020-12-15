@@ -31,6 +31,7 @@ public class GainKnife {
      * @param target
      */
     public static void bind(Activity target){
+        KnifeContainer.getInstance().setMainClass(target.getClass());
         Knife.findGainForKeyWordTarget(target);
     }
 
@@ -40,6 +41,7 @@ public class GainKnife {
      * @param target
      */
     public static void bind(Fragment target){
+        KnifeContainer.getInstance().setMainClass(target.getClass());
         Knife.findGainForKeyWordTarget(target);
     }
 
@@ -49,6 +51,7 @@ public class GainKnife {
      * @param target
      */
     public static void bind(Dialog target){
+        KnifeContainer.getInstance().setMainClass(target.getClass());
         Knife.findGainForKeyWordTarget(target);
     }
 
@@ -58,6 +61,7 @@ public class GainKnife {
      * @param target
      */
     public static void bind(PopupWindow target){
+        KnifeContainer.getInstance().setMainClass(target.getClass());
         Knife.findGainForKeyWordTarget(target);
     }
 
@@ -70,6 +74,7 @@ public class GainKnife {
      * @param target
      */
     public static void bind(Object target){
+        KnifeContainer.getInstance().setMainClass(target.getClass());
         Knife.findGainForKeyWordTarget(target);
     }
 
@@ -109,7 +114,7 @@ public class GainKnife {
      * @param targetCls 被注册的类型
      */
     public static void unBind(Class targetCls){
-        KnifeContainer.getInstance().remove(targetCls.getName());
+        KnifeContainer.getInstance().unRelated(targetCls.getName());
         LifecycleObservable.get().unAttachLifecycle(targetCls);
     }
 }
