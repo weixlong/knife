@@ -20,7 +20,7 @@ import com.wxl.mvp.util.Loog;
  */
 public class TwoActivity extends BaseActivity {
 
-    @GainField(target = P.class,life = TwoActivity.class)
+    @GainField(target = PX.class,life = TwoActivity.class)
     AP px;
 
     @GainApi
@@ -35,9 +35,9 @@ public class TwoActivity extends BaseActivity {
 
     @Override
     protected void onCreateBindViewChanged(@Nullable Bundle savedInstanceState) {
-        Loog.e("start bind");
+        Loog.methodE("start bind");
         GainKnife.bind(this);
-        Loog.e("end bind");
+        Loog.methodE("end bind");
         textView = findViewById(R.id.textView);
         GainHttp.exe(api.loadConfig("Home.getConfig"), new Callback<String>() {
             @Override
@@ -55,8 +55,14 @@ public class TwoActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Loog.e("start unbind");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        Loog.methodE("start unbind");
         GainKnife.unBind(getClass());
-        Loog.e("end unbind");
+        Loog.methodE("end unbind");
+        super.onDestroy();
     }
 }

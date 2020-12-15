@@ -99,6 +99,17 @@ public class GainKnife {
        Knife.findUnSupportConstructorGainForKeyWordTarget(target, life);
     }
 
+
+    /**
+     * 唤醒一个被unBind释放的类
+     * 如:同一个类被指定了两次，被另一个销毁之后，需调用该方法恢复到当前应用的类，否则将会有空指针风险
+     * @param target
+     */
+    public static void onResumeWhenTargetReleased(Class target){
+        Knife.onResumeTargetLifecycle(target);
+    }
+
+
     /**
      * 取消注册
      *  取消注册一个通过registerUnableConstructorTarget 注册的对象

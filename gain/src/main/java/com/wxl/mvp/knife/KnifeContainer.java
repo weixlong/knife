@@ -1,5 +1,7 @@
 package com.wxl.mvp.knife;
 
+import android.text.TextUtils;
+
 import com.wxl.mvp.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -297,6 +299,9 @@ public class KnifeContainer {
      * @param cls
      */
     public void unRelated(String cls){
+        if(TextUtils.equals(cls,mainClass.getName())){
+            mainClass = null;
+        }
         boolean b = registerRelatedPool.containsKey(cls);
         if(b){
             remove(cls);

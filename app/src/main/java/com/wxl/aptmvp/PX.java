@@ -6,17 +6,14 @@ import com.wxl.mvp.lifecycle.GainActivityLifecycle;
 import com.wxl.mvp.util.Loog;
 
 /**
- * create file time : 2020/10/12
+ * create file time : 2020/12/15
  * create user : wxl
  * subscribe :
  */
-
-public class P extends AP implements GainActivityLifecycle {
-
+public class PX  extends AP implements GainActivityLifecycle {
 
     @GainField(target = M.class)
     M m;
-
 
     @GainLifecycle(life = MainActivity.class)
     @Override
@@ -37,6 +34,7 @@ public class P extends AP implements GainActivityLifecycle {
         Loog.methodE("onStop");
     }
 
+
     @Override
     public void onGainAttach() {
         Loog.methodE("onGainAttach");
@@ -49,6 +47,6 @@ public class P extends AP implements GainActivityLifecycle {
 
     @Override
     public void start() {
-        Loog.e("start");
+        Loog.methodE("start");
     }
 }

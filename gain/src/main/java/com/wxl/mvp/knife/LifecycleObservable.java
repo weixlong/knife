@@ -156,16 +156,18 @@ public class LifecycleObservable {
      * @param observable
      * @param lifecycle
      */
-    public synchronized void observableActivityEvent(Class key, Observable<ActivityEvent> observable, final GainActivityLifecycle lifecycle){
-        if(lifecycleTags.contains(lifecycle.getClass().getName())){
+    public synchronized void observableActivityEvent(Class key, Observable<ActivityEvent> observable, final GainActivityLifecycle lifecycle,boolean isLoadAttach){
+        if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
             return;
         }
         synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName())){
+            if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
                 return;
             }
         }
-        lifecycle.onGainAttach();
+        if(isLoadAttach) {
+            lifecycle.onGainAttach();
+        }
         addLifecycle(key,lifecycle);
         lifecycleDisposables.put(key,observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ActivityEvent>() {
@@ -173,6 +175,7 @@ public class LifecycleObservable {
                     public void accept(ActivityEvent activityEvent) throws Exception {
                         if(lifecycle != null) {
                             switch (activityEvent) {
+
                                 case RESUME:
                                     lifecycle.onResume();
                                     break;
@@ -181,9 +184,6 @@ public class LifecycleObservable {
                                     break;
                                 case STOP:
                                     lifecycle.onStop();
-                                    break;
-                                case DESTROY:
-                                    lifecycle.onDestroy();
                                     break;
                             }
                         }
@@ -197,16 +197,18 @@ public class LifecycleObservable {
      * @param observable
      * @param lifecycle
      */
-    public synchronized void observableFragmentEvent(Class key, Observable<FragmentEvent> observable, final GainFragmentLifecycle lifecycle){
-        if(lifecycleTags.contains(lifecycle.getClass().getName())){
+    public synchronized void observableFragmentEvent(Class key, Observable<FragmentEvent> observable, final GainFragmentLifecycle lifecycle,boolean isLoadAttach){
+        if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
             return;
         }
         synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName())){
+            if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
                 return;
             }
         }
-        lifecycle.onGainAttach();
+        if(isLoadAttach) {
+            lifecycle.onGainAttach();
+        }
         addLifecycle(key,lifecycle);
         lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<FragmentEvent>() {
@@ -214,6 +216,7 @@ public class LifecycleObservable {
                     public void accept(FragmentEvent fragmentEvent) throws Exception {
                         if(lifecycle != null){
                             switch (fragmentEvent) {
+
                                 case CREATE_VIEW:
                                     lifecycle.onCreateView();
                                     break;
@@ -228,9 +231,6 @@ public class LifecycleObservable {
                                     break;
                                 case DESTROY_VIEW:
                                     lifecycle.onDestroyView();
-                                    break;
-                                case DESTROY:
-                                    lifecycle.onDestroy();
                                     break;
                             }
                         }

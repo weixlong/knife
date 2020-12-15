@@ -46,7 +46,7 @@ public class Knife {
             findGainLifeTypeByTarget(target);
             findGainLifeMethodByTarget(target);
             findGainApiAnnotation(target);
-            findTargetFieldSetValue(target.getClass());
+            findTargetFieldSetValue(target.getClass(),true);
             KnifeContainer.getInstance().addRelated(target.getClass());
         }
     }
@@ -191,7 +191,6 @@ public class Knife {
      * @param names
      */
     private static void loadGainLifeType(String name, ArrayList keys, ArrayList events, ArrayList names) {
-        Loog.methodE(name + " : " + keys.size());
         for (int i = 0; i < keys.size(); i++) {
             String key = (String) keys.get(i);
             String event = (String) events.get(i);
@@ -297,7 +296,7 @@ public class Knife {
         Target target = KnifeContainer.getInstance().getTargetByUnSupportConstructor(cls.getName());
         if (target != null) {
             target.setCoverLifeKey(lifeKey.getName());
-            findTargetFieldSetValue(cls);
+            findTargetFieldSetValue(cls,true);
             return true;
         }
         return false;
@@ -309,7 +308,7 @@ public class Knife {
      *
      * @param cls
      */
-    private static void findTargetFieldSetValue(Class cls) {
+    private static void findTargetFieldSetValue(Class cls,boolean isLoadAttach) {
         HashMap<String, Target> fieldTargets = KnifeContainer.getInstance().getFieldTargets(cls.getName());
         if (fieldTargets != null) {
             Object obj = KnifeContainer.getInstance().findObj(cls.getName());
@@ -322,9 +321,19 @@ public class Knife {
                 if (target.isLoadChild() && o != null) {
                     findGainForKeyWordTarget(o);
                 }
-                loadLifecycleTarget(o, target.getCoverLifeKey());
+                loadLifecycleTarget(o, target.getCoverLifeKey(),isLoadAttach);
             }
         }
+    }
+
+
+    /**
+     * 唤醒某个类的生命周期，如果对同一个类进行了不同的生命周期指定，在回调之前的类时需要唤醒该生命周期
+     * @param cls 恢复到该class 上
+     */
+    public static void onResumeTargetLifecycle(Class cls){
+        KnifeContainer.getInstance().setMainClass(cls);
+        findTargetFieldSetValue(cls,false);
     }
 
 
@@ -474,13 +483,13 @@ public class Knife {
      * @param target
      * @param lifeKey
      */
-    private static void loadLifecycleTarget(Object target, String lifeKey) {
+    private static void loadLifecycleTarget(Object target, String lifeKey,boolean isLoadAttach) {
         if (target instanceof Lifecycle) {
             if (!TextUtils.equals(lifeKey, GainKnife.UNSUPPORTID.getName())) {
-                bindLifecycleToTarget(target, lifeKey);
+                bindLifecycleToTarget(target, lifeKey,isLoadAttach);
             } else {
                 //从target上寻找@GainLifecycle
-                loadLifecycleTarget(target);
+                loadLifecycleTarget(target,isLoadAttach);
             }
         }
     }
@@ -491,11 +500,11 @@ public class Knife {
      *
      * @param target
      */
-    private static void loadLifecycleTarget(Object target) {
+    private static void loadLifecycleTarget(Object target,boolean isLoadAttach) {
         Loog.methodE(target.getClass().getName());
         Target typeTarget = KnifeContainer.getInstance().findTypeTarget(target.getClass().getName());
         if (typeTarget != null) {
-            bindLifecycleToTarget(target, typeTarget.getId());
+            bindLifecycleToTarget(target, typeTarget.getId(),isLoadAttach);
         }
     }
 
@@ -506,14 +515,14 @@ public class Knife {
      * @param target
      * @param lifeKey
      */
-    private static void bindLifecycleToTarget(Object target, String lifeKey) {
+    private static void bindLifecycleToTarget(Object target, String lifeKey,boolean isLoadAttach) {
         Object targetById = KnifeContainer.getInstance().findObj(lifeKey);
         if (targetById != null) {
             if (targetById instanceof LifecycleProvider) {
                 LifecycleProvider provider = (LifecycleProvider) targetById;
-                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, provider);
+                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, provider,isLoadAttach);
             } else {
-                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, null);
+                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, null,isLoadAttach);
             }
         }
     }
@@ -525,16 +534,16 @@ public class Knife {
      * @param target
      * @param provider
      */
-    private static void bindLifecycleToTarget(Class cls, Lifecycle target, LifecycleProvider provider) {
+    private static void bindLifecycleToTarget(Class cls, Lifecycle target, LifecycleProvider provider,boolean isLoadAttach) {
         if (provider != null) {
             Observable observable = provider.lifecycle();
 
             if (target instanceof GainFragmentLifecycle) {
-                LifecycleObservable.get().observableFragmentEvent(cls, observable, (GainFragmentLifecycle) target);
+                LifecycleObservable.get().observableFragmentEvent(cls, observable, (GainFragmentLifecycle) target,isLoadAttach);
             }
 
             if (target instanceof GainActivityLifecycle) {
-                LifecycleObservable.get().observableActivityEvent(cls, observable, (GainActivityLifecycle) target);
+                LifecycleObservable.get().observableActivityEvent(cls, observable, (GainActivityLifecycle) target,isLoadAttach);
             }
 
             if (target instanceof GainDialogLifecycle) {
@@ -708,7 +717,6 @@ public class Knife {
                         Field declaredField = target.getClass().getDeclaredField(name);
                         declaredField.setAccessible(true);
                         declaredField.set(target,null);
-                        Loog.methodE("target : "+target.getClass().getName()+" field : "+name);
                     } catch (NoSuchFieldException e) {
                         if(Loog.TEST_DEBUG) {
                             e.printStackTrace();
@@ -741,7 +749,6 @@ public class Knife {
                         Field declaredField = target.getClass().getDeclaredField((String) name);
                         declaredField.setAccessible(true);
                         declaredField.set(target,null);
-                        Loog.methodE("target : "+target.getClass().getName()+" field : "+name);
                     }
                 }
             }

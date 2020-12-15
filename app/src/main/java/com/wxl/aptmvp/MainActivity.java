@@ -28,6 +28,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreateBindViewBefore(@Nullable Bundle savedInstanceState) {
+        Loog.methodE("start bind");
+        GainKnife.bind(this);
+        Loog.methodE("end bind");
         //GainKnife.registerUnableConstructorTarget(new P(0));
     }
 
@@ -39,9 +42,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreateBindViewChanged(@Nullable Bundle savedInstanceState) {
-        Loog.e("start bind");
-        GainKnife.bind(this);
-        Loog.e("end bind");
         textView = findViewById(R.id.textView);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +63,12 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        //GainKnife.onResumeWhenTargetReleased(getClass());
+        super.onResume();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -72,14 +78,13 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         //GainKnife.unRegisterUnableConstructorTarget(getClass());
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Loog.e("start unbind");
+        Loog.methodE("start unbind");
         GainKnife.unBind(getClass());
-        Loog.e("end unbind");
+        Loog.methodE("end unbind");
     }
 }

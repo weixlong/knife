@@ -22,7 +22,6 @@ import com.wxl.mvp.knife.Knife;
 import com.wxl.mvp.knife.LifecycleBean;
 import com.wxl.mvp.smart.SmartView;
 import com.wxl.mvp.util.ActivityLifecycleCallback;
-import com.wxl.mvp.util.Loog;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -660,7 +659,6 @@ public class GainHttp {
             String className = traceElement.getClassName();
             String methodName = traceElement.getMethodName();
             HttpLifecycleUser user = new HttpLifecycleUser(Class.forName(className),methodName);
-            Loog.d(" use gain class = " + className);
             return user;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
