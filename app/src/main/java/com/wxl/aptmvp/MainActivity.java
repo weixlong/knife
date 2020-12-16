@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GainHttp.exe(api.loadConfig("Home.getConfig"), new Callback<String>() {
+                GainHttp.load(api.loadConfig("Home.getConfig"), new Callback<String>() {
                     @Override
                     public void onSuccess(String s) {
                         textView.setText(s);

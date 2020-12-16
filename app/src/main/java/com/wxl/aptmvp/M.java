@@ -5,6 +5,7 @@ import com.wxl.apt_annotation.GainApi;
 import com.wxl.apt_annotation.GainLifecycle;
 import com.wxl.mvp.http.Callback;
 import com.wxl.mvp.http.GainHttp;
+import com.wxl.mvp.lifecycle.GainActivityLifecycle;
 import com.wxl.mvp.util.Loog;
 
 /**
@@ -13,7 +14,7 @@ import com.wxl.mvp.util.Loog;
  * subscribe :
  */
 @GainLifecycle(life = MainActivity.class,event = ApiEvent.STOP)
-public class M {
+public class M implements GainActivityLifecycle {
 
     @GainApi
     Api api;
@@ -32,8 +33,31 @@ public class M {
                     Loog.methodE(error);
                 }
             });
-        } else {
-            api = GainHttp.api(Api.class);
         }
+    }
+
+    @Override
+    public void onResume() {
+        Loog.methodE("onResume");
+    }
+
+    @Override
+    public void onPause() {
+        Loog.methodE("onPause");
+    }
+
+    @Override
+    public void onStop() {
+        Loog.methodE("onStop");
+    }
+
+    @Override
+    public void onGainAttach() {
+        Loog.methodE("onGainAttach");
+    }
+
+    @Override
+    public void onGainDetach() {
+        Loog.methodE("onGainDetach");
     }
 }

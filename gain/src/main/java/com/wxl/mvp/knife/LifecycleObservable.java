@@ -28,13 +28,13 @@ import io.reactivex.functions.Consumer;
 public class LifecycleObservable {
 
     private static class LO {
-       public static LifecycleObservable mLifecycleObservable = new LifecycleObservable();
+        public static LifecycleObservable mLifecycleObservable = new LifecycleObservable();
     }
 
     private LifecycleObservable() {
     }
 
-    public static LifecycleObservable get(){
+    public static LifecycleObservable get() {
         return LO.mLifecycleObservable;
     }
 
@@ -56,50 +56,57 @@ public class LifecycleObservable {
 
     /**
      * 回调对应的生命周期
+     *
      * @param
      * @param lifecycle
      */
-    public synchronized void observableAttachEvent(Class key,  final Lifecycle lifecycle){
-        if(lifecycleTags.contains(lifecycle.getClass().getName())){
+    public synchronized void observableAttachEvent(Class key, final Lifecycle lifecycle) {
+        if (lifecycleTags.contains(lifecycle.getClass().getName())) {
             return;
         }
-        synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName())){
+        synchronized (this) {
+            if (lifecycleTags.contains(lifecycle.getClass().getName())) {
                 return;
             }
         }
         lifecycle.onGainAttach();
-        addLifecycle(key,lifecycle);
+        addLifecycle(key, lifecycle);
     }
 
     /**
      * 回调对应的生命周期
+     *
      * @param observable
      * @param lifecycle
      */
-    public synchronized void observablePopEvent(Class key, Observable<PopupWindowEvent> observable, final GainPopLifecycle lifecycle){
-        if(lifecycleTags.contains(lifecycle.getClass().getName())){
+    public synchronized void observablePopEvent(Class key, Observable<PopupWindowEvent> observable, final GainPopLifecycle lifecycle) {
+        if (lifecycleTags.contains(lifecycle.getClass().getName())) {
             return;
         }
-        synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName())){
+        synchronized (this) {
+            if (lifecycleTags.contains(lifecycle.getClass().getName())) {
                 return;
             }
         }
         lifecycle.onGainAttach();
-        addLifecycle(key,lifecycle);
-        lifecycleDisposables.put(key,observable.subscribeOn(AndroidSchedulers.mainThread())
+        addLifecycle(key, lifecycle);
+        if(lifecycleDisposables.containsKey(key))return;
+        lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PopupWindowEvent>() {
                     @Override
                     public void accept(PopupWindowEvent activityEvent) throws Exception {
-                        if(lifecycle != null) {
-                            switch (activityEvent) {
-                                case SHOW:
-                                    lifecycle.show();
-                                    break;
-                                case DISMISS:
-                                    lifecycle.dismiss();
-                                    break;
+                        List<Lifecycle> baseLifecycles = lifecycles.get(key);
+                        for (int i = baseLifecycles.size() - 1; i >= 0; i--) {
+                            if (baseLifecycles.get(i) != null) {
+                                GainPopLifecycle popLifecycle = (GainPopLifecycle) baseLifecycles.get(i);
+                                switch (activityEvent) {
+                                    case SHOW:
+                                        popLifecycle.show();
+                                        break;
+                                    case DISMISS:
+                                        popLifecycle.dismiss();
+                                        break;
+                                }
                             }
                         }
                     }
@@ -109,41 +116,47 @@ public class LifecycleObservable {
 
     /**
      * 回调对应的生命周期
+     *
      * @param observable
      * @param lifecycle
      */
-    public synchronized void observableDialogEvent(Class key, Observable<DialogEvent> observable, final GainDialogLifecycle lifecycle){
-        if(lifecycleTags.contains(lifecycle.getClass().getName())){
+    public synchronized void observableDialogEvent(Class key, Observable<DialogEvent> observable, final GainDialogLifecycle lifecycle) {
+        if (lifecycleTags.contains(lifecycle.getClass().getName())) {
             return;
         }
-        synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName())){
+        synchronized (this) {
+            if (lifecycleTags.contains(lifecycle.getClass().getName())) {
                 return;
             }
         }
         lifecycle.onGainAttach();
-        addLifecycle(key,lifecycle);
-        lifecycleDisposables.put(key,observable.subscribeOn(AndroidSchedulers.mainThread())
+        addLifecycle(key, lifecycle);
+        if(lifecycleDisposables.containsKey(key))return;
+        lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DialogEvent>() {
                     @Override
                     public void accept(DialogEvent activityEvent) throws Exception {
-                        if(lifecycle != null) {
-                            switch (activityEvent) {
-                                case CREATE:
-                                    lifecycle.onCreate();
-                                    break;
-                                case START:
-                                    lifecycle.onStart();
-                                    break;
-                                case SHOW:
-                                    lifecycle.show();
-                                    break;
-                                case STOP:
-                                    lifecycle.onStop();
-                                    break;
-                                case DISMISS:
-                                    lifecycle.dismiss();
-                                    break;
+                        List<Lifecycle> baseLifecycles = lifecycles.get(key);
+                        for (int i = baseLifecycles.size() - 1; i >= 0; i--) {
+                            if (baseLifecycles.get(i) != null) {
+                                GainDialogLifecycle dialogLifecycle = (GainDialogLifecycle) baseLifecycles.get(i);
+                                switch (activityEvent) {
+                                    case CREATE:
+                                        dialogLifecycle.onCreate();
+                                        break;
+                                    case START:
+                                        dialogLifecycle.onStart();
+                                        break;
+                                    case SHOW:
+                                        dialogLifecycle.show();
+                                        break;
+                                    case STOP:
+                                        dialogLifecycle.onStop();
+                                        break;
+                                    case DISMISS:
+                                        dialogLifecycle.dismiss();
+                                        break;
+                                }
                             }
                         }
                     }
@@ -153,38 +166,43 @@ public class LifecycleObservable {
 
     /**
      * 回调对应的生命周期
+     *
      * @param observable
      * @param lifecycle
      */
-    public synchronized void observableActivityEvent(Class key, Observable<ActivityEvent> observable, final GainActivityLifecycle lifecycle,boolean isLoadAttach){
-        if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
+    public synchronized void observableActivityEvent(Class key, Observable<ActivityEvent> observable, final GainActivityLifecycle lifecycle, boolean isLoadAttach) {
+        if (lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)) {
             return;
         }
-        synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
+        synchronized (this) {
+            if (lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)) {
                 return;
             }
         }
-        if(isLoadAttach) {
+        if (isLoadAttach) {
             lifecycle.onGainAttach();
         }
-        addLifecycle(key,lifecycle);
-        lifecycleDisposables.put(key,observable.subscribeOn(AndroidSchedulers.mainThread())
+        addLifecycle(key, lifecycle);
+        if(lifecycleDisposables.containsKey(key))return;
+        lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ActivityEvent>() {
                     @Override
                     public void accept(ActivityEvent activityEvent) throws Exception {
-                        if(lifecycle != null) {
-                            switch (activityEvent) {
-
-                                case RESUME:
-                                    lifecycle.onResume();
-                                    break;
-                                case PAUSE:
-                                    lifecycle.onPause();
-                                    break;
-                                case STOP:
-                                    lifecycle.onStop();
-                                    break;
+                        List<Lifecycle> baseLifecycles = lifecycles.get(key);
+                        for (int i = baseLifecycles.size() - 1; i >= 0; i--) {
+                            if (baseLifecycles.get(i) != null) {
+                                GainActivityLifecycle activityLifecycle = (GainActivityLifecycle) baseLifecycles.get(i);
+                                switch (activityEvent) {
+                                    case RESUME:
+                                        activityLifecycle.onResume();
+                                        break;
+                                    case PAUSE:
+                                        activityLifecycle.onPause();
+                                        break;
+                                    case STOP:
+                                        activityLifecycle.onStop();
+                                        break;
+                                }
                             }
                         }
                     }
@@ -194,73 +212,79 @@ public class LifecycleObservable {
 
     /**
      * 回调对应的生命周期
+     *
      * @param observable
      * @param lifecycle
      */
-    public synchronized void observableFragmentEvent(Class key, Observable<FragmentEvent> observable, final GainFragmentLifecycle lifecycle,boolean isLoadAttach){
-        if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
+    public synchronized void observableFragmentEvent(Class key, Observable<FragmentEvent> observable, final GainFragmentLifecycle lifecycle, boolean isLoadAttach) {
+        if (lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)) {
             return;
         }
-        synchronized (this){
-            if(lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)){
+        synchronized (this) {
+            if (lifecycleTags.contains(lifecycle.getClass().getName()) && lifecycles.containsKey(key)) {
                 return;
             }
         }
-        if(isLoadAttach) {
+        if (isLoadAttach) {
             lifecycle.onGainAttach();
         }
-        addLifecycle(key,lifecycle);
+        addLifecycle(key, lifecycle);
+        if(lifecycleDisposables.containsKey(key))return;
         lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<FragmentEvent>() {
                     @Override
                     public void accept(FragmentEvent fragmentEvent) throws Exception {
-                        if(lifecycle != null){
-                            switch (fragmentEvent) {
-
-                                case CREATE_VIEW:
-                                    lifecycle.onCreateView();
-                                    break;
-                                case RESUME:
-                                    lifecycle.onResume();
-                                    break;
-                                case PAUSE:
-                                    lifecycle.onPause();
-                                    break;
-                                case STOP:
-                                    lifecycle.onStop();
-                                    break;
-                                case DESTROY_VIEW:
-                                    lifecycle.onDestroyView();
-                                    break;
+                        List<Lifecycle> baseLifecycles = lifecycles.get(key);
+                        for (int i = baseLifecycles.size() - 1; i >= 0; i--) {
+                            if (baseLifecycles.get(i) != null) {
+                                GainFragmentLifecycle fragmentLifecycle = (GainFragmentLifecycle) baseLifecycles.get(i);
+                                switch (fragmentEvent) {
+                                    case CREATE_VIEW:
+                                        fragmentLifecycle.onCreateView();
+                                        break;
+                                    case RESUME:
+                                        fragmentLifecycle.onResume();
+                                        break;
+                                    case PAUSE:
+                                        fragmentLifecycle.onPause();
+                                        break;
+                                    case STOP:
+                                        fragmentLifecycle.onStop();
+                                        break;
+                                    case DESTROY_VIEW:
+                                        fragmentLifecycle.onDestroyView();
+                                        break;
+                                }
                             }
                         }
+
                     }
                 }));
     }
 
 
-
-    private synchronized void addLifecycle(Class key, Lifecycle lifecycle){
+    private synchronized void addLifecycle(Class key, Lifecycle lifecycle) {
         lifecycleTags.add(lifecycle.getClass().getName());
-        if(lifecycles.containsKey(key)){
+        if (lifecycles.containsKey(key)) {
             List<Lifecycle> baseLifecycles = lifecycles.get(key);
-            if(CollectionUtils.isNull(baseLifecycles)){
+            if (CollectionUtils.isNull(baseLifecycles)) {
                 baseLifecycles = new ArrayList<>();
             }
             baseLifecycles.add(lifecycle);
         } else {
             List<Lifecycle> baseLifecycles = new ArrayList<>();
             baseLifecycles.add(lifecycle);
-            lifecycles.put(key,baseLifecycles);
+            lifecycles.put(key, baseLifecycles);
         }
     }
 
-    public void unAttachLifecycle(Class key){
-        if(lifecycles.containsKey(key)){
+    public void unAttachLifecycle(Class key) {
+        if (lifecycles.containsKey(key)) {
             List<Lifecycle> baseLifecycles = lifecycles.remove(key);
-            if(CollectionUtils.isNotEmpty(baseLifecycles)){
-                for (Lifecycle lifecycle : baseLifecycles) {
-                    if(lifecycleTags.contains(lifecycle.getClass().getName())){
+            if (CollectionUtils.isNotEmpty(baseLifecycles)) {
+                for (int i = baseLifecycles.size() - 1; i >= 0; i--) {
+                    Lifecycle lifecycle = baseLifecycles.get(i);
+                    if (lifecycleTags.contains(lifecycle.getClass().getName())) {
                         lifecycleTags.remove(lifecycle.getClass().getName());
                     }
                     lifecycle.onGainDetach();
@@ -268,9 +292,9 @@ public class LifecycleObservable {
                 baseLifecycles.clear();
             }
         }
-        if(lifecycleDisposables.containsKey(key)){
+        if (lifecycleDisposables.containsKey(key)) {
             Disposable disposable = lifecycleDisposables.remove(key);
-            if(disposable != null){
+            if (disposable != null) {
                 disposable.dispose();
             }
         }

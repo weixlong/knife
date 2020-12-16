@@ -533,14 +533,17 @@ public class GainHttp {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .compose(lifecycleProvider.bindUntilEvent(event));
+                    .compose(lifecycleProvider.bindUntilEvent(converActivityEvent(event)));
         } else if (lifecycleProvider instanceof RxFragment) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .compose(lifecycleProvider.bindUntilEvent(event));
+                    .compose(lifecycleProvider.bindUntilEvent(converFragmentEvent(event)));
         }
-        return defaultSchedulers();
+        return  observable -> observable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(lifecycleProvider.bindUntilEvent(event));
     }
 
     /**
@@ -593,7 +596,7 @@ public class GainHttp {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .compose(lifecycleProvider.bindUntilEvent(event))
+                    .compose(lifecycleProvider.bindUntilEvent(converActivityEvent(event)))
                     .doOnSubscribe((Consumer) disposable -> option().showLoading())
                     .doFinally((Action) () -> {
                         option().dismissLoading();
@@ -602,7 +605,7 @@ public class GainHttp {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .compose(lifecycleProvider.bindUntilEvent(event))
+                    .compose(lifecycleProvider.bindUntilEvent(converFragmentEvent(event)))
                     .doOnSubscribe(disposable -> {
                         option().showLoading();
                     })
@@ -610,9 +613,71 @@ public class GainHttp {
                         option().dismissLoading();
                     });
         }
-        return defaultDialogSchedulers();
+        return observable -> observable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(lifecycleProvider.bindUntilEvent(event))
+                .doOnSubscribe(disposable -> {
+                    option().showLoading();
+                })
+                .doFinally((Action) () -> {
+                    option().dismissLoading();
+                });
     }
 
+
+
+
+
+    /**
+     * 转为ActivityEvent
+     * @param event
+     * @return
+     */
+    private ActivityEvent converActivityEvent(ApiEvent event){
+        switch (event) {
+            case START:
+                return ActivityEvent.START;
+            case CREATE:
+                return ActivityEvent.CREATE;
+            case STOP:
+                return ActivityEvent.STOP;
+            case RESUME:
+                return ActivityEvent.RESUME;
+            case DESTROY:
+                return ActivityEvent.DESTROY;
+            case PAUSE:
+                return ActivityEvent.PAUSE;
+        }
+        return ActivityEvent.DESTROY;
+    }
+
+    /**
+     * 转为FragmentEvent
+     * @param event
+     * @return
+     */
+    private FragmentEvent converFragmentEvent(ApiEvent event){
+        switch (event) {
+            case START:
+                return FragmentEvent.START;
+            case CREATE:
+                return FragmentEvent.CREATE;
+            case STOP:
+                return FragmentEvent.STOP;
+            case RESUME:
+                return FragmentEvent.RESUME;
+            case DESTROY:
+                return FragmentEvent.DESTROY;
+            case PAUSE:
+                return FragmentEvent.PAUSE;
+            case DESTROYVIEW:
+                return FragmentEvent.DESTROY_VIEW;
+            case ACTIVITYCREATE:
+                return FragmentEvent.CREATE_VIEW;
+        }
+        return FragmentEvent.DESTROY;
+    }
 
     /**
      * 获得默认Dialog Observable

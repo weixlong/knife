@@ -12,7 +12,7 @@ import com.wxl.mvp.util.Loog;
  */
 public class PX  extends AP implements GainActivityLifecycle {
 
-    @GainField(target = M.class)
+    @GainField(target = M.class,life = TwoActivity.class)
     M m;
 
     @GainLifecycle(life = MainActivity.class)

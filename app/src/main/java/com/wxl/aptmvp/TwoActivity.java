@@ -20,7 +20,7 @@ import com.wxl.mvp.util.Loog;
  */
 public class TwoActivity extends BaseActivity {
 
-    @GainField(target = P.class,life = TwoActivity.class)
+    @GainField(target = PX.class,life = TwoActivity.class)
     AP px;
 
     @GainApi
