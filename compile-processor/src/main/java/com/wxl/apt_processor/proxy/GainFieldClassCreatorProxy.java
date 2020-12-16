@@ -21,7 +21,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic;
 
 /**
  * create file time : 2020/10/12
@@ -56,7 +55,7 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
             try {
                 gainField.target();
             } catch (MirroredTypeException e) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "---->" + e.getTypeMirror().toString());
+               // processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "---->" + e.getTypeMirror().toString());
                 ids.add(e.getTypeMirror().toString());
                 try {
                     gainField.life();
@@ -82,13 +81,13 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
     }
 
     public static void writeJava(ProcessingEnvironment processingEnv) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "cache : " + cache.size());
+        //processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "cache : " + cache.size());
         Iterator<Map.Entry<String, GainFieldClassCreatorProxy>> iterator = cache.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, GainFieldClassCreatorProxy> next = iterator.next();
             GainFieldClassCreatorProxy proxy = next.getValue();
             TypeSpec typeSpec = proxy.generateJavaCode();
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, proxy.getBindingClassName());
+          //  processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, proxy.getBindingClassName());
             if (proxy.getPackageName() != null && !proxy.getPackageName().isEmpty() && typeSpec != null) {
                 try {
                     JavaFile javaFile = JavaFile.builder(proxy.getPackageName(), typeSpec).build();

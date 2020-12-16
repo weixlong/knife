@@ -19,7 +19,6 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic;
 
 /**
  * create file time : 2020/12/7
@@ -63,13 +62,13 @@ public class GainApiClassCreatorProxy extends ClassCreatorProxy {
     }
 
     public static void writeJava(ProcessingEnvironment processingEnv) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,"cache : "+cache.size());
+        //processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,"cache : "+cache.size());
         Iterator<Map.Entry<String, GainApiClassCreatorProxy>> iterator = cache.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, GainApiClassCreatorProxy> next = iterator.next();
             GainApiClassCreatorProxy proxy = next.getValue();
             TypeSpec typeSpec = proxy.generateJavaCode();
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, proxy.getBindingClassName());
+           // processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, proxy.getBindingClassName());
             if (proxy.getPackageName() != null && !proxy.getPackageName().isEmpty() && typeSpec != null) {
                 try {
                     JavaFile javaFile = JavaFile.builder(proxy.getPackageName(), typeSpec).build();

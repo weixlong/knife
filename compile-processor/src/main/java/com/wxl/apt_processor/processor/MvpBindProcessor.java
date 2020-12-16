@@ -20,7 +20,6 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic;
 
 
 /**
@@ -66,14 +65,14 @@ public class MvpBindProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "processing...");
+       // mMessager.printMessage(Diagnostic.Kind.NOTE, "processing...");
         for (Class<?> cl : annotationCls) {
             AbsProcessor pProcessor = processors.get(cl);
             if (pProcessor != null) {
                 pProcessor.createJavaFile(mElementUtils,processingEnv, roundEnv);
             }
         }
-        mMessager.printMessage(Diagnostic.Kind.NOTE, "process finish ...");
+       // mMessager.printMessage(Diagnostic.Kind.NOTE, "process finish ...");
         return true;
     }
 }

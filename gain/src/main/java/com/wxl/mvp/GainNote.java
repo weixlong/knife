@@ -25,26 +25,6 @@ public class GainNote {
      * @param context 上下文
      *
      */
-    public static void init(Context context){
-        init(context,debug,null,null);
-    }
-
-
-    /**
-     * 初始化
-     * @param context 上下文
-     *
-     */
-    public static void init(Context context,boolean debug){
-        init(context,debug,null,null);
-    }
-
-
-    /**
-     * 初始化
-     * @param context 上下文
-     *
-     */
     public static void init(Context context, GainHttp.Option... option){
         init(context,debug,null,option);
     }

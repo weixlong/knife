@@ -22,7 +22,6 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic;
 
 /**
  * create file time : 2020/12/7
@@ -80,13 +79,13 @@ public class GainHttpLifecycleClassCreatorProxy extends ClassCreatorProxy {
 
 
     public static void writeJava(ProcessingEnvironment processingEnv) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,"cache : "+cache.size());
+       // processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE,"cache : "+cache.size());
         Iterator<Map.Entry<String, GainHttpLifecycleClassCreatorProxy>> iterator = cache.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, GainHttpLifecycleClassCreatorProxy> next = iterator.next();
             GainHttpLifecycleClassCreatorProxy proxy = next.getValue();
             TypeSpec typeSpec = proxy.generateJavaCode();
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, proxy.getBindingClassName());
+          //  processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, proxy.getBindingClassName());
             if (proxy.getPackageName() != null && !proxy.getPackageName().isEmpty() && typeSpec != null) {
                 try {
                     JavaFile javaFile = JavaFile.builder(proxy.getPackageName(), typeSpec).build();
