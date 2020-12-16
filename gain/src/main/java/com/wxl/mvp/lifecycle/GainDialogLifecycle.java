@@ -7,8 +7,6 @@ package com.wxl.mvp.lifecycle;
  */
 public interface GainDialogLifecycle extends GainPopLifecycle {
 
-    void onCreate();
-
     void onStart();
 
     void onStop();

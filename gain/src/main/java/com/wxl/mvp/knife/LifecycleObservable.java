@@ -141,9 +141,6 @@ public class LifecycleObservable {
                             if (baseLifecycles.get(i) != null) {
                                 GainDialogLifecycle dialogLifecycle = (GainDialogLifecycle) baseLifecycles.get(i);
                                 switch (activityEvent) {
-                                    case CREATE:
-                                        dialogLifecycle.onCreate();
-                                        break;
                                     case START:
                                         dialogLifecycle.onStart();
                                         break;
@@ -239,9 +236,6 @@ public class LifecycleObservable {
                             if (baseLifecycles.get(i) != null) {
                                 GainFragmentLifecycle fragmentLifecycle = (GainFragmentLifecycle) baseLifecycles.get(i);
                                 switch (fragmentEvent) {
-                                    case CREATE_VIEW:
-                                        fragmentLifecycle.onCreateView();
-                                        break;
                                     case RESUME:
                                         fragmentLifecycle.onResume();
                                         break;
