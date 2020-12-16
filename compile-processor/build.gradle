@@ -8,32 +8,5 @@ dependencies {
     implementation project(':apt-annotation')
 }
 
-//下述为混淆jar包的方式
-task deleteOldJar(type: Delete) {
-    //不混淆的jar
-   // delete 'build/libs/unPro_passportsdk.jar'
-    //混淆的jar
-    delete 'build/libs/compile-processor.jar'
-}
-
-task exportJar(type: Copy) {
-    from('build/intermediates/bundles/debug/')
-    into('build/libs/')
-    include('classes.jar')
-    rename ('classes.jar', 'compile-processor.jar')
-}
-
-task makeJar(type: proguard.gradle.ProGuardTask, dependsOn: "build") {
-// 未混淆的jar
-    injars 'build/libs/un_compile-processor.jar'
-// 混淆后的jar路径
-    outjars 'build/libs/compile-processor.jar'
-// 具体需要keep住的类
-    configuration'proguard-rules.pro'// 混淆配置文件
-
-    libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
-}
-makeJar.dependsOn(deleteOldJar,exportJar,build);
-
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"

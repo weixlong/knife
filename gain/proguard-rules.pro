@@ -35,6 +35,8 @@
 # 这个过滤器是谷歌推荐的算法，一般不做更改
 -optimizations !code/simplification/cast,!field/*,!class/merging/*
 
+#混淆jar的时候一定要配置，不然会把没有用到的代码全部remove   我本来封装一个jar就是给别人调用的，全部删掉就没有东西了
+-dontshrink
 
 #############################################
 #
@@ -145,8 +147,11 @@
 -keep class com.wxl.mvp.view.** { *; }
 -keep class com.wxl.mvp.util.** { *; }
 -keep class com.wxl.mvp.weiget.** { *; }
--keep class com.wxl.mvp.http.GainHttp
--keep class com.wxl.mvp.permissions.OnPermissionResultCallback
--keep class com.wxl.mvp.permissions.PermissionReq
--keep class om.wxl.mvp.GainKnife
--keep class om.wxl.mvp.GainNote
+-keep class com.wxl.mvp.base.** { *; }
+-keep class com.wxl.mvp.http.GainHttp { *; }
+-keep class com.wxl.mvp.permissions.OnPermissionResultCallback { *; }
+-keep class com.wxl.mvp.permissions.PermissionReq { *; }
+-keep class om.wxl.mvp.GainKnife { *; }
+-keep class om.wxl.mvp.GainNote { *; }
+-keep class com.wxl.mvp.anim.Anim { *; }
+-keep class com.wxl.apt_annotation { *; }
