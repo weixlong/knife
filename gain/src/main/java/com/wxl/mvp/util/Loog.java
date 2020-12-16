@@ -13,7 +13,7 @@ public class Loog {
 
     private static final String TAG = Loog.class.getSimpleName();
 
-    public static final boolean TEST_DEBUG = true;
+    public static final boolean TEST_DEBUG = false;
 
     public static void d(String msg){
         Log.d(TAG,msg);
