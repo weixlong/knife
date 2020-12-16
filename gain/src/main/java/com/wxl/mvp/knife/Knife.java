@@ -46,7 +46,7 @@ public class Knife {
             findGainLifeTypeByTarget(target);
             findGainLifeMethodByTarget(target);
             findGainApiAnnotation(target);
-            findTargetFieldSetValue(target.getClass(),true);
+            findTargetFieldSetValue(target.getClass(), true);
             KnifeContainer.getInstance().addRelated(target.getClass());
         }
     }
@@ -78,15 +78,15 @@ public class Knife {
             }
 
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (NoSuchMethodException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (InvocationTargetException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         }
@@ -106,15 +106,15 @@ public class Knife {
             Class<?> aClass = Class.forName(target.substring(0, target.lastIndexOf(".")) + "." + path);
             return aClass.newInstance();
         } catch (ClassNotFoundException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (InstantiationException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         }
@@ -168,15 +168,15 @@ public class Knife {
             }
 
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (NoSuchMethodException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (InvocationTargetException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         }
@@ -249,15 +249,15 @@ public class Knife {
             }
 
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (NoSuchMethodException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (InvocationTargetException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         }
@@ -296,7 +296,7 @@ public class Knife {
         Target target = KnifeContainer.getInstance().getTargetByUnSupportConstructor(cls.getName());
         if (target != null) {
             target.setCoverLifeKey(lifeKey.getName());
-            findTargetFieldSetValue(cls,true);
+            findTargetFieldSetValue(cls, true);
             return true;
         }
         return false;
@@ -308,7 +308,7 @@ public class Knife {
      *
      * @param cls
      */
-    private static void findTargetFieldSetValue(Class cls,boolean isLoadAttach) {
+    private static void findTargetFieldSetValue(Class cls, boolean isLoadAttach) {
         HashMap<String, Target> fieldTargets = KnifeContainer.getInstance().getFieldTargets(cls.getName());
         if (fieldTargets != null) {
             Object obj = KnifeContainer.getInstance().findObj(cls.getName());
@@ -321,7 +321,7 @@ public class Knife {
                 if (target.isLoadChild() && o != null) {
                     findGainForKeyWordTarget(o);
                 }
-                loadLifecycleTarget(o, target.getCoverLifeKey(),isLoadAttach);
+                loadLifecycleTarget(o, target.getCoverLifeKey(), isLoadAttach);
             }
         }
     }
@@ -329,11 +329,12 @@ public class Knife {
 
     /**
      * 唤醒某个类的生命周期，如果对同一个类进行了不同的生命周期指定，在回调之前的类时需要唤醒该生命周期
+     *
      * @param cls 恢复到该class 上
      */
-    public static void onResumeTargetLifecycle(Class cls){
+    public static void onResumeTargetLifecycle(Class cls) {
         KnifeContainer.getInstance().setMainClass(cls);
-        findTargetFieldSetValue(cls,false);
+        findTargetFieldSetValue(cls, false);
     }
 
 
@@ -359,11 +360,11 @@ public class Knife {
                     }
                 }
             } catch (NoSuchFieldException e) {
-                if(Loog.TEST_DEBUG) {
+                if (Loog.TEST_DEBUG) {
                     Loog.expection(e);
                 }
             } catch (IllegalAccessException e) {
-                if(Loog.TEST_DEBUG) {
+                if (Loog.TEST_DEBUG) {
                     Loog.expection(e);
                 }
             }
@@ -446,11 +447,11 @@ public class Knife {
             try {
                 return aClass.newInstance();
             } catch (IllegalAccessException e) {
-                if(Loog.TEST_DEBUG) {
+                if (Loog.TEST_DEBUG) {
                     Loog.expection(e);
                 }
             } catch (InstantiationException e) {
-                if(Loog.TEST_DEBUG) {
+                if (Loog.TEST_DEBUG) {
                     Loog.expection(e);
                 }
             }
@@ -469,7 +470,7 @@ public class Knife {
         try {
             return Class.forName(target.getId());
         } catch (ClassNotFoundException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         }
@@ -483,13 +484,13 @@ public class Knife {
      * @param target
      * @param lifeKey
      */
-    private static void loadLifecycleTarget(Object target, String lifeKey,boolean isLoadAttach) {
+    private static void loadLifecycleTarget(Object target, String lifeKey, boolean isLoadAttach) {
         if (target instanceof Lifecycle) {
             if (!TextUtils.equals(lifeKey, GainKnife.UNSUPPORTID.getName())) {
-                bindLifecycleToTarget(target, lifeKey,isLoadAttach);
+                bindLifecycleToTarget(target, lifeKey, isLoadAttach);
             } else {
                 //从target上寻找@GainLifecycle
-                loadLifecycleTarget(target,isLoadAttach);
+                loadLifecycleTarget(target, isLoadAttach);
             }
         }
     }
@@ -500,11 +501,11 @@ public class Knife {
      *
      * @param target
      */
-    private static void loadLifecycleTarget(Object target,boolean isLoadAttach) {
+    private static void loadLifecycleTarget(Object target, boolean isLoadAttach) {
         Loog.methodE(target.getClass().getName());
         Target typeTarget = KnifeContainer.getInstance().findTypeTarget(target.getClass().getName());
         if (typeTarget != null) {
-            bindLifecycleToTarget(target, typeTarget.getId(),isLoadAttach);
+            bindLifecycleToTarget(target, typeTarget.getId(), isLoadAttach);
         }
     }
 
@@ -515,14 +516,14 @@ public class Knife {
      * @param target
      * @param lifeKey
      */
-    private static void bindLifecycleToTarget(Object target, String lifeKey,boolean isLoadAttach) {
+    private static void bindLifecycleToTarget(Object target, String lifeKey, boolean isLoadAttach) {
         Object targetById = KnifeContainer.getInstance().findObj(lifeKey);
         if (targetById != null) {
             if (targetById instanceof LifecycleProvider) {
                 LifecycleProvider provider = (LifecycleProvider) targetById;
-                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, provider,isLoadAttach);
+                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, provider, isLoadAttach);
             } else {
-                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, null,isLoadAttach);
+                bindLifecycleToTarget(targetById.getClass(), (Lifecycle) target, null, isLoadAttach);
             }
         }
     }
@@ -534,26 +535,20 @@ public class Knife {
      * @param target
      * @param provider
      */
-    private static void bindLifecycleToTarget(Class cls, Lifecycle target, LifecycleProvider provider,boolean isLoadAttach) {
+    private static void bindLifecycleToTarget(Class cls, Lifecycle target, LifecycleProvider provider, boolean isLoadAttach) {
         if (provider != null) {
             Observable observable = provider.lifecycle();
-
             if (target instanceof GainFragmentLifecycle) {
-                LifecycleObservable.get().observableFragmentEvent(cls, observable, (GainFragmentLifecycle) target,isLoadAttach);
-            }
-
-            if (target instanceof GainActivityLifecycle) {
-                LifecycleObservable.get().observableActivityEvent(cls, observable, (GainActivityLifecycle) target,isLoadAttach);
-            }
-
-            if (target instanceof GainDialogLifecycle) {
+                LifecycleObservable.get().observableFragmentEvent(cls, observable, (GainFragmentLifecycle) target, isLoadAttach);
+            } else if (target instanceof GainActivityLifecycle) {
+                LifecycleObservable.get().observableActivityEvent(cls, observable, (GainActivityLifecycle) target, isLoadAttach);
+            } else if (target instanceof GainDialogLifecycle) {
                 LifecycleObservable.get().observableDialogEvent(cls, observable, (GainDialogLifecycle) target);
-            }
-
-            if (target instanceof GainPopLifecycle) {
+            } else if (target instanceof GainPopLifecycle) {
                 LifecycleObservable.get().observablePopEvent(cls, observable, (GainPopLifecycle) target);
+            } else {
+                LifecycleObservable.get().observableAttachEvent(cls, target);
             }
-
         } else {
             LifecycleObservable.get().observableAttachEvent(cls, target);
         }
@@ -614,23 +609,23 @@ public class Knife {
             ArrayList names = (ArrayList) getNames.invoke(instance);
             setTargetGainApiValue(target, names);
         } catch (ClassNotFoundException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (InstantiationException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (NoSuchMethodException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         } catch (InvocationTargetException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
             }
         }
@@ -663,11 +658,11 @@ public class Knife {
                 }
             }
         } catch (NoSuchFieldException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         }
@@ -676,16 +671,17 @@ public class Knife {
 
     /**
      * 找对应的class
+     *
      * @param target
      * @param name
      * @return
      */
-    private static Class findGainClass(Class target,String name){
+    private static Class findGainClass(Class target, String name) {
         String path = target.getName().replace(".", "_") + "_" + name;
         try {
             return Class.forName(target.getName().substring(0, target.getName().lastIndexOf(".")) + "." + path);
         } catch (ClassNotFoundException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         }
@@ -694,35 +690,37 @@ public class Knife {
 
     /**
      * 释放
+     *
      * @param target
      */
-    public static void releaseGainClassKnife(Object target){
+    public static void releaseGainClassKnife(Object target) {
         releaseGainField(target);
         releaseGainApi(target);
     }
 
     /**
      * 释放类上的注解@GainLifecycle
+     *
      * @param target
      */
-    private static void releaseGainField(Object target){
+    private static void releaseGainField(Object target) {
         HashMap<String, Target> map = KnifeContainer.getInstance().getFieldTargets(target.getClass().getName());
-        if(CollectionUtils.isNotEmpty(map)){
+        if (CollectionUtils.isNotEmpty(map)) {
             Iterator<Map.Entry<String, Target>> iterator = map.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Target> next = iterator.next();
                 String name = next.getValue().getName();
-                if(!TextUtils.isEmpty(name)){
+                if (!TextUtils.isEmpty(name)) {
                     try {
                         Field declaredField = target.getClass().getDeclaredField(name);
                         declaredField.setAccessible(true);
-                        declaredField.set(target,null);
+                        declaredField.set(target, null);
                     } catch (NoSuchFieldException e) {
-                        if(Loog.TEST_DEBUG) {
+                        if (Loog.TEST_DEBUG) {
                             e.printStackTrace();
                         }
                     } catch (IllegalAccessException e) {
-                        if(Loog.TEST_DEBUG) {
+                        if (Loog.TEST_DEBUG) {
                             e.printStackTrace();
                         }
                     }
@@ -734,12 +732,13 @@ public class Knife {
 
     /**
      * 释放GainApi注解
+     *
      * @param target
      */
-    private static void releaseGainApi(Object target){
+    private static void releaseGainApi(Object target) {
         try {
             Class gainClass = findGainClass(target.getClass(), "GainApiLoader");
-            if(gainClass != null) {
+            if (gainClass != null) {
                 Object instance = gainClass.newInstance();
                 Method getNames = gainClass.getDeclaredMethod("getNames");
                 getNames.setAccessible(true);
@@ -748,28 +747,28 @@ public class Knife {
                     for (Object name : names) {
                         Field declaredField = target.getClass().getDeclaredField((String) name);
                         declaredField.setAccessible(true);
-                        declaredField.set(target,null);
+                        declaredField.set(target, null);
                     }
                 }
             }
         } catch (IllegalAccessException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         } catch (InstantiationException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         } catch (NoSuchMethodException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         } catch (InvocationTargetException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         } catch (NoSuchFieldException e) {
-            if(Loog.TEST_DEBUG) {
+            if (Loog.TEST_DEBUG) {
                 e.printStackTrace();
             }
         }

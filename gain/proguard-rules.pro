@@ -141,6 +141,67 @@
 #    public static int e(...);
 #}
 
+
+#butterknife 这些开源的框架，一般混淆规则都在github或者框架介绍中给出了，自己copy过来即可
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+# 对于带有回调函数的onXXEvent、**On*Listener的，不能被混淆
+-keepclassmembers class * {
+void *(**On*Event);
+void *(**On*Listener);
+ }
+
+ -keepattributes *Annotation*
+
+
+ -keepclassmembers class ** {
+     public void onEvent*(**);
+ }
+
+ # Only required if you use AsyncExecutor
+ -keepclassmembers class * extends de.greenrobot.event.util.ThrowableFailureEvent {
+     <init>(java.lang.Throwable);
+ }
+
+ -keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+
+
+ # Glide
+  -keep public class * implements com.bumptech.glide.module.GlideModule
+ -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** { **[] $VALUES; public *; }
+
+ # Gson
+  -keepattributes Signature
+  -keepattributes *Annotation*
+  -keep class sun.misc.Unsafe { *; }
+  -keep class com.google.gson.stream.** { *; }
+   # 使用Gson时需要配置Gson的解析对象及变量都不混淆。不然Gson会找不到变量。
+   # 将下面替换成自己的实体类
+ -keep class com.example.bean.** { *; }
+
+
+ # OkHttp3
+ -dontwarn com.squareup.okhttp3.**
+  -keep class com.squareup.okhttp3.** { *;}
+  -dontwarn okio.**
+
+  # RxJava RxAndroid
+  -dontwarn sun.misc.**
+  -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* { long producerIndex; long consumerIndex; }
+  -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef { rx.internal.util.atomic.LinkedQueueNode producerNode; }
+  -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef { rx.internal.util.atomic.LinkedQueueNode consumerNode; }
+
+
 -keep class com.wxl.mvp.event.** { *; }
 -keep class com.wxl.mvp.lifecycle.** { *; }
 -keep class com.wxl.mvp.smart.** { *; }
