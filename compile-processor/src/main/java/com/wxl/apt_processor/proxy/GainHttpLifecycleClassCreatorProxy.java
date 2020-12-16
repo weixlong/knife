@@ -1,5 +1,6 @@
 package com.wxl.apt_processor.proxy;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -100,16 +101,22 @@ public class GainHttpLifecycleClassCreatorProxy extends ClassCreatorProxy {
 
     @Override
     public TypeSpec generateJavaCode() {
+
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
+
         FieldSpec targetIds = FieldSpec.builder(ArrayList.class, "keys")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         FieldSpec lifes = FieldSpec.builder(ArrayList.class, "events")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         FieldSpec names = FieldSpec.builder(ArrayList.class, "names")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         TypeSpec bindingClass = TypeSpec.classBuilder(getBindingClassName())
@@ -129,31 +136,39 @@ public class GainHttpLifecycleClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec getNames() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getNames")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.names");
         return methodBuilder.build();
     }
 
     private MethodSpec getEvents() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getEvents")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.events");
         return methodBuilder.build();
     }
 
     private MethodSpec getKeys() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getKeys")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.keys");
         return methodBuilder.build();
     }
 
     private MethodSpec addEvents() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addEvents")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (ApiEvent event : events) {
             methodBuilder.addStatement("this.events.add($S)",event);
@@ -162,7 +177,9 @@ public class GainHttpLifecycleClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec addKeys() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addKeys")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (String life : keys) {
             methodBuilder.addStatement("this.keys.add($S)",life);
@@ -171,7 +188,9 @@ public class GainHttpLifecycleClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec addNames() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addNames")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (String name : names) {
             methodBuilder.addStatement("this.names.add($S)",name);

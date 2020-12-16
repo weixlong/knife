@@ -1,5 +1,6 @@
 package com.wxl.apt_processor.proxy;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -102,21 +103,26 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
 
     @Override
     public TypeSpec generateJavaCode() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
 
         FieldSpec targetIds = FieldSpec.builder(ArrayList.class, "targetIds")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         FieldSpec lifes = FieldSpec.builder(ArrayList.class, "lifes")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         FieldSpec names = FieldSpec.builder(ArrayList.class, "names")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         FieldSpec loadChilds = FieldSpec.builder(ArrayList.class, "loadChilds")
                 .addModifiers(Modifier.PRIVATE)
+                .addAnnotation(spec)
                 .build();
 
         TypeSpec bindingClass = TypeSpec.classBuilder(mBindingClassName)
@@ -178,7 +184,9 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec addLoadChilds() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addLoadChilds")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (Boolean b : loadChilds) {
             methodBuilder.addStatement("this.loadChilds.add($S)", b);
@@ -187,7 +195,9 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec addTargetIds() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addTargetIds")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (String id : ids) {
             methodBuilder.addStatement("this.targetIds.add($S)", id);
@@ -196,7 +206,9 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec addLifes() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addLifes")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (String life : lifes) {
             methodBuilder.addStatement("this.lifes.add($S)", life);
@@ -205,7 +217,9 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec addNames() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addNames")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (String name : names) {
             methodBuilder.addStatement("this.names.add($S)", name);
@@ -215,8 +229,10 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
 
 
     private MethodSpec getLoadChilds() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getLoadChilds")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.loadChilds");
         return methodBuilder.build();
@@ -224,16 +240,20 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
 
 
     private MethodSpec getTargetIds() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getTargetIds")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.targetIds");
         return methodBuilder.build();
     }
 
     private MethodSpec getLifes() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getLifes")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.lifes");
         return methodBuilder.build();
@@ -241,8 +261,10 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
 
 
     private MethodSpec getNames() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getNames")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(spec)
                 .returns(ArrayList.class)
                 .addStatement("return this.names");
         return methodBuilder.build();

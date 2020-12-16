@@ -1,5 +1,6 @@
 package com.wxl.apt_processor.proxy;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -84,13 +85,14 @@ public class GainApiClassCreatorProxy extends ClassCreatorProxy {
     @Override
     public TypeSpec generateJavaCode() {
 
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         FieldSpec names = FieldSpec.builder(ArrayList.class, "names")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE)
                 .build();
 
         TypeSpec bindingClass = TypeSpec.classBuilder(getBindingClassName())
                 .addModifiers(Modifier.PUBLIC)
-
                 .addField(names)
                 .addMethod(generateMethods())
                 .addMethod(addNames())
@@ -100,7 +102,9 @@ public class GainApiClassCreatorProxy extends ClassCreatorProxy {
     }
 
     private MethodSpec getNames() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("getNames")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PUBLIC)
                 .returns(ArrayList.class)
                 .addStatement("return this.names");
@@ -110,7 +114,9 @@ public class GainApiClassCreatorProxy extends ClassCreatorProxy {
 
 
     private MethodSpec addNames() {
+        AnnotationSpec spec = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build();
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("addNames")
+                .addAnnotation(spec)
                 .addModifiers(Modifier.PRIVATE);
         for (String name : names) {
             methodBuilder.addStatement("this.names.add($S)",name);
