@@ -202,7 +202,7 @@ public class Knife {
     }
 
     /**
-     * 开始寻找一个不支持没有bind的类
+     * 开始寻找一个不支持Constructor没有bind的类
      *
      * @param target
      * @param lifeKey

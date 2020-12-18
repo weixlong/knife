@@ -18,7 +18,7 @@ public class GainNote {
 
 
     private static Context context;
-    private static boolean debug = true;
+    public static boolean debug = true;
 
     /**
      * 初始化

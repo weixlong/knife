@@ -3,6 +3,7 @@ package com.wxl.aptmvp;
 import android.app.Application;
 
 import com.wxl.mvp.GainNote;
+import com.wxl.mvp.http.AccessTokenInterceptor;
 import com.wxl.mvp.http.GainHttp;
 
 /**
@@ -17,8 +18,7 @@ public class App extends Application {
         super.onCreate();
         GainNote.init(this, GainHttp.option().api(Api.class)
                 .baseUrl("https://api.xuanjige.net")
-                .build(), GainHttp.option().api(Api.class)
-                .baseUrl("https://api.xuanjige.net")
+                .addInterceptor(new AccessTokenInterceptor())
                 .build());
     }
 }
