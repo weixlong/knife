@@ -93,8 +93,10 @@ public class GainKnife {
      * 如：未通过bind方法绑定的 Activity,Fragment,Dialog,PopupWindow。
      * 或者带参构造类
      *
-     * @param target
+     * @param target\
+     * @link bind
      */
+    @Deprecated
     public static void registerUnableConstructorTarget(Object target) {
         if(target == null) return;
         registerUnableConstructorTarget(target, UNSUPPORTID);
@@ -107,7 +109,9 @@ public class GainKnife {
      *
      * @param target 被注册对象
      * @param life   需要与哪个已经被初始化并注册，且具有生命周期能力的类同步被释放。
+     * @link bind
      */
+    @Deprecated
     public static void registerUnableConstructorTarget(Object target, Class life) {
         if(target == null || life == null) return;
         Knife.findUnSupportConstructorGainForKeyWordTarget(target, life);
@@ -131,7 +135,9 @@ public class GainKnife {
      * 取消注册一个通过registerUnableConstructorTarget 注册的对象
      *
      * @param targetCls 被注册对象
+     * @link unBind
      */
+    @Deprecated
     public static void unRegisterUnableConstructorTarget(Class targetCls) {
         if(targetCls == null) return;
         KnifeContainer.getInstance().removeUnSupport(targetCls.getName());
