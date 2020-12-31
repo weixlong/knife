@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.wxl.apt_annotation.GainApi;
 import com.wxl.apt_annotation.GainField;
+import com.wxl.aptmvp.api.AP;
 import com.wxl.mvp.GainKnife;
 import com.wxl.mvp.base.BaseActivity;
 import com.wxl.mvp.http.Callback;

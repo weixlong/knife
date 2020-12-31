@@ -177,8 +177,8 @@ public class GainFieldClassCreatorProxy extends ClassCreatorProxy {
         if (variableElement != null) {
             TypeElement enclosingElement = (TypeElement) variableElement.getEnclosingElement();
             String name = enclosingElement.getQualifiedName().toString();
-            String path = name.replace(".", "_");
-            return path + "_FieldLoader";
+            String[] path = name.split("\\.");
+            return path[path.length-1] + "GainFL";
         }
         return "";
     }

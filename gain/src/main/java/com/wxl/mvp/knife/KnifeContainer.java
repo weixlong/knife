@@ -65,7 +65,7 @@ public class KnifeContainer {
      * @param target
      */
     public void putTypeLife(String name, Target target) {
-        HashMap<String, Target> targets = getContainer(name, "TypeLifecycleLoader");
+        HashMap<String, Target> targets = getContainer(name, "GainTLL");
         if (CollectionUtils.isNull(targets)) {
             targets = new HashMap<>();
         }
@@ -80,7 +80,7 @@ public class KnifeContainer {
      * @return
      */
     public Target findTypeTarget(String name) {
-        HashMap<String, Target> typeLifecycleLoader = getContainer(name, "TypeLifecycleLoader");
+        HashMap<String, Target> typeLifecycleLoader = getContainer(name, "GainTLL");
         if (CollectionUtils.isNotEmpty(typeLifecycleLoader)) {
             return typeLifecycleLoader.get(name);
         }
@@ -93,7 +93,7 @@ public class KnifeContainer {
      * @param name 类全名
      */
     public void putMethodLife(String name, Target target) {
-        HashMap<String, Target> targets = getContainer(name, "MethodLifecycleLoader");
+        HashMap<String, Target> targets = getContainer(name, "GainMLL");
         if (CollectionUtils.isNull(targets)) {
             targets = new HashMap<>();
         }
@@ -108,7 +108,7 @@ public class KnifeContainer {
      * @param method
      */
     public Target getMethodLife(String name, String method) {
-        HashMap<String, Target> methodLifecycleLoader = getContainer(name, "MethodLifecycleLoader");
+        HashMap<String, Target> methodLifecycleLoader = getContainer(name, "GainMLL");
         if (CollectionUtils.isNotEmpty(methodLifecycleLoader)) {
             return methodLifecycleLoader.get(method);
         }
@@ -122,7 +122,7 @@ public class KnifeContainer {
      * @param name 类全名
      */
     public void putField(String name, Target target) {
-        HashMap<String, Target> targets = getContainer(name, "FieldLoader");
+        HashMap<String, Target> targets = getContainer(name, "GainFL");
         if (CollectionUtils.isNull(targets)) {
             targets = new HashMap<>();
         }
@@ -138,7 +138,8 @@ public class KnifeContainer {
      * @return
      */
     private String getNameKey(String name, String tag) {
-        return name.replace(".", "_") + "_" + tag;
+        String[] split = name.split("\\.");
+        return split[split.length-1]+ tag;
     }
 
     /**
@@ -179,7 +180,7 @@ public class KnifeContainer {
      * @return
      */
     public HashMap<String, Target> getFieldTargets(String name) {
-        return getContainer(name, "FieldLoader");
+        return getContainer(name, "GainFL");
     }
 
 
@@ -189,7 +190,7 @@ public class KnifeContainer {
      * @return
      */
     public HashMap<String,Target> getMethodLifecycleLoader(String name){
-        return getContainer(name,"MethodLifecycleLoader");
+        return getContainer(name,"GainMLL");
     }
 
     /**
@@ -198,7 +199,7 @@ public class KnifeContainer {
      * @return
      */
     public HashMap<String,Target> getTypeLifecycleLoader(String name){
-        return  getContainer(name, "TypeLifecycleLoader");
+        return  getContainer(name, "GainTLL");
     }
 
     /**
@@ -208,7 +209,7 @@ public class KnifeContainer {
      * @return
      */
     public Target getFieldTarget(String name, String fieldName) {
-        HashMap<String, Target> targets = getContainer(name, "FieldLifecycleLoader");
+        HashMap<String, Target> targets = getContainer(name, "GainFLL");
         if (CollectionUtils.isNotEmpty(targets)) {
             return targets.get(fieldName);
         }

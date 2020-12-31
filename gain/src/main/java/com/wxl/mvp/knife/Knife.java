@@ -61,7 +61,7 @@ public class Knife {
     private static void findGainLifeMethodByTarget(Class target) {
         try {
             String name = target.getName();
-            Object o = newAptClass(name, "MethodLifecycleLoader");
+            Object o = newAptClass(name, "GainMLL");
             if (o != null) {
                 Method getKeys = o.getClass().getDeclaredMethod("getKeys");
                 getKeys.setAccessible(true);
@@ -103,8 +103,9 @@ public class Knife {
      */
     private static Object newAptClass(String target, String name) {
         try {
-            String path = target.replace(".", "_") + "_" + name;
-            Class<?> aClass = Class.forName(target.substring(0, target.lastIndexOf(".")) + "." + path);
+            String[] path = target.split("\\.");
+            String p = path[path.length - 1]+name;
+            Class<?> aClass = Class.forName(target.substring(0, target.lastIndexOf(".")) + "." + p);
             return aClass.newInstance();
         } catch (ClassNotFoundException e) {
             if (Loog.TEST_DEBUG) {
@@ -150,7 +151,7 @@ public class Knife {
         try {
 
             String name = target.getName();
-            Object o = newAptClass(name, "TypeLifecycleLoader");
+            Object o = newAptClass(name, "GainTLL");
 
             if (o != null) {
                 Method getKeys = o.getClass().getDeclaredMethod("getKeys");
@@ -275,7 +276,7 @@ public class Knife {
         try {
 
             String name = cls.getName();
-            Object instance = newAptClass(name, "FieldLoader");
+            Object instance = newAptClass(name, "GainFL");
 
             if (instance != null) {
 
@@ -651,8 +652,10 @@ public class Knife {
         try {
             String name = targetCls.getName();
             String key = name.substring(0, name.lastIndexOf("."));
-            String path = key + "." + name.replace(".", "_") + "_GainApiLoader";
+            String[] split = name.split("\\.");
+            String path = key + "." +split[split.length -1]  + "GainAL";
             Class<?> aClass = Class.forName(path);
+
             Object instance = aClass.newInstance();
             Method getNames = aClass.getDeclaredMethod("getNames");
             getNames.setAccessible(true);
@@ -727,8 +730,9 @@ public class Knife {
      * @return
      */
     private static Class findGainClass(Class target, String name) {
-        String path = target.getName().replace(".", "_") + "_" + name;
         try {
+            String[] split = target.getName().split("\\.");
+            String path = split[split.length-1] +  name;
             return Class.forName(target.getName().substring(0, target.getName().lastIndexOf(".")) + "." + path);
         } catch (ClassNotFoundException e) {
             if (Loog.TEST_DEBUG) {
@@ -787,7 +791,7 @@ public class Knife {
      */
     private static void releaseGainApi(Object target) {
         try {
-            Class gainClass = findGainClass(target.getClass(), "GainApiLoader");
+            Class gainClass = findGainClass(target.getClass(), "GAL");
             if (gainClass != null) {
                 Object instance = gainClass.newInstance();
                 Method getNames = gainClass.getDeclaredMethod("getNames");

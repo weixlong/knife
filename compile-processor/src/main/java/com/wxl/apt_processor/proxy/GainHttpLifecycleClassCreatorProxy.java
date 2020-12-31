@@ -234,13 +234,13 @@ public class GainHttpLifecycleClassCreatorProxy extends ClassCreatorProxy {
             //返回封装该元素的类
             TypeElement enclosingElement = (TypeElement) variableElement.getEnclosingElement();
             String name = enclosingElement.getQualifiedName().toString();
-            String path = name.replace(".","_");
-            return path+"_MethodLifecycleLoader";
+            String[] path = name.split("\\.");
+            return path[path.length-1]+"GainMLL";
         } else if(mElement instanceof TypeElement){
             String name = ((TypeElement)mElement).getQualifiedName().toString();
-           String path = name.replace(".","_");
-            return path+"_TypeLifecycleLoader";
+           String[] path = name.split("\\.");
+            return path[path.length - 1]+"GainTLL";
         }
-        return "GainLifecycleLoader";
+        return "GainLLL";
     }
 }

@@ -1,6 +1,7 @@
 package com.wxl.aptmvp;
 
 import com.wxl.apt_annotation.GainLifecycle;
+import com.wxl.aptmvp.api.AP;
 import com.wxl.mvp.lifecycle.GainActivityLifecycle;
 import com.wxl.mvp.util.Loog;
 

@@ -148,7 +148,7 @@ public class GainApiClassCreatorProxy extends ClassCreatorProxy {
         VariableElement variableElement = (VariableElement) mElement;
         //返回封装该元素的类
         TypeElement enclosingElement = (TypeElement) variableElement.getEnclosingElement();
-        String replace = enclosingElement.getQualifiedName().toString().replace(".", "_");
-        return replace+"_GainApiLoader";
+        String[] split = enclosingElement.getQualifiedName().toString().split("\\.");
+        return split[split.length-1]+"GainAL";
     }
 }

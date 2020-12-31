@@ -77,4 +77,5 @@ dependencies {
     // annotationProcessor files('libs/compile-processor.jar')
     api files('libs/apt-annotation.jar')
     api files('libs/compile-processor.jar')
+    implementation files('libs/compile-processor.jar')
 }
