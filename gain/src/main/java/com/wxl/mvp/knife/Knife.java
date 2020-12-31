@@ -41,11 +41,12 @@ public class Knife {
      */
     public static void findGainForKeyWordTarget(Object target) {
         if (target != null && !KnifeContainer.getInstance().isBinded(target.getClass().getName())) {
+            findTargetSuperClass(target, target.getClass().getSuperclass());
             KnifeContainer.getInstance().setRegisterObj(target);
             findTargetGainFieldAnnotation(target.getClass());
-            findGainLifeTypeByTarget(target);
-            findGainLifeMethodByTarget(target);
-            findGainApiAnnotation(target);
+            findGainLifeTypeByTarget(target.getClass());
+            findGainLifeMethodByTarget(target.getClass());
+            findGainApiAnnotation(target, target.getClass(),false);
             findTargetFieldSetValue(target.getClass(), true);
             KnifeContainer.getInstance().addRelated(target.getClass());
         }
@@ -57,9 +58,9 @@ public class Knife {
      *
      * @param target
      */
-    private static void findGainLifeMethodByTarget(Object target) {
+    private static void findGainLifeMethodByTarget(Class target) {
         try {
-            String name = target.getClass().getName();
+            String name = target.getName();
             Object o = newAptClass(name, "MethodLifecycleLoader");
             if (o != null) {
                 Method getKeys = o.getClass().getDeclaredMethod("getKeys");
@@ -145,10 +146,10 @@ public class Knife {
      *
      * @param target
      */
-    private static void findGainLifeTypeByTarget(Object target) {
+    private static void findGainLifeTypeByTarget(Class target) {
         try {
 
-            String name = target.getClass().getName();
+            String name = target.getName();
             Object o = newAptClass(name, "TypeLifecycleLoader");
 
             if (o != null) {
@@ -198,6 +199,55 @@ public class Knife {
             Target target = new Target(name1, key);
             target.setApiEvent(event);
             KnifeContainer.getInstance().putTypeLife(name, target);
+        }
+    }
+
+
+    /**
+     * 找目标对象的父类，如果存在父类并且父类中包含可解析字段
+     * 其他如：GainLifecycle 注解即在该父类调用时自动解析生命周期
+     * 故：只解析对应的字段
+     *
+     * @param target
+     */
+    private static void findTargetSuperClass(Object target, Class<?> superclass) {
+        if (superclass != null) {
+            findTargetGainFieldAnnotation(superclass);
+            findGainLifeTypeByTarget(superclass);
+            findGainLifeMethodByTarget(superclass);
+            findGainApiAnnotation(target, superclass,true);
+            findTargetSuperFieldSetValue(superclass, target, true);
+            KnifeContainer.getInstance().addRelated(superclass);
+            Class<?> superclassSuperclass = superclass.getSuperclass();
+            if (superclassSuperclass != null) {
+                findTargetSuperClass(target, superclassSuperclass);
+            }
+        }
+    }
+
+
+
+
+    /**
+     * 找到class 下的@GianField注解，并且赋值
+     *
+     * @param cls
+     */
+    private static void findTargetSuperFieldSetValue(Class cls, Object childObj, boolean isLoadAttach) {
+        HashMap<String, Target> fieldTargets = KnifeContainer.getInstance().getFieldTargets(cls.getName());
+        if (fieldTargets != null) {
+            Object obj = KnifeContainer.getInstance().findObj(cls.getName());
+            Iterator<Map.Entry<String, Target>> iterator = fieldTargets.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Target> next = iterator.next();
+                Target target = next.getValue();
+                Object o = findFieldTarget(cls, target);
+                setFieldValue(cls, obj == null ? childObj : obj, target, o);
+                if (target.isLoadChild() && o != null) {
+                    findGainForKeyWordTarget(o);
+                }
+                loadLifecycleTarget(o, target.getCoverLifeKey(), isLoadAttach);
+            }
         }
     }
 
@@ -597,9 +647,9 @@ public class Knife {
      *
      * @param target
      */
-    private static void findGainApiAnnotation(Object target) {
+    private static void findGainApiAnnotation(Object target, Class targetCls, boolean isSuperClass) {
         try {
-            String name = target.getClass().getName();
+            String name = targetCls.getName();
             String key = name.substring(0, name.lastIndexOf("."));
             String path = key + "." + name.replace(".", "_") + "_GainApiLoader";
             Class<?> aClass = Class.forName(path);
@@ -607,7 +657,7 @@ public class Knife {
             Method getNames = aClass.getDeclaredMethod("getNames");
             getNames.setAccessible(true);
             ArrayList names = (ArrayList) getNames.invoke(instance);
-            setTargetGainApiValue(target, names);
+            setTargetGainApiValue(target, targetCls, names, isSuperClass);
         } catch (ClassNotFoundException e) {
             if (Loog.TEST_DEBUG) {
                 Loog.expection(e);
@@ -638,12 +688,12 @@ public class Knife {
      * @param target
      * @param names
      */
-    private static void setTargetGainApiValue(Object target, ArrayList names) {
+    private static void setTargetGainApiValue(Object target, Class targetCls, ArrayList names, boolean isSuperClass) {
         try {
             Class<?> aClass = target.getClass();
             for (Object name : names) {
                 String field = (String) name;
-                Field declaredField = aClass.getDeclaredField(field);
+                Field declaredField = isSuperClass ? targetCls.getDeclaredField(field) : aClass.getDeclaredField(field);
                 declaredField.setAccessible(true);
                 Object api = GainHttp.api(declaredField.getType());
                 if (api != null) {

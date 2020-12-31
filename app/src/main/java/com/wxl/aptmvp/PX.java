@@ -2,7 +2,6 @@ package com.wxl.aptmvp;
 
 import com.wxl.apt_annotation.GainField;
 import com.wxl.apt_annotation.GainLifecycle;
-import com.wxl.mvp.lifecycle.GainActivityLifecycle;
 import com.wxl.mvp.util.Loog;
 
 /**
@@ -10,9 +9,9 @@ import com.wxl.mvp.util.Loog;
  * create user : wxl
  * subscribe :
  */
-public class PX  extends AP implements GainActivityLifecycle {
+public class PX extends AP {
 
-    @GainField(target = M.class,life = TwoActivity.class)
+    @GainField(target = M.class, life = TwoActivity.class)
     M m;
 
     @GainLifecycle(life = MainActivity.class)

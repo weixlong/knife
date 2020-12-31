@@ -25,7 +25,7 @@ public class M implements GainActivityLifecycle {
             GainHttp.load(api.loadConfig("Home.getConfig"), new Callback<String>() {
                 @Override
                 public void onSuccess(String s) {
-                    Loog.methodE(s);
+                    Loog.methodE("loadApk success");
                 }
 
                 @Override

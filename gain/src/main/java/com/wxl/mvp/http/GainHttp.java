@@ -10,6 +10,8 @@ import com.lxj.xpopup.util.navbar.NavigationBarObserver;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle2.components.support.RxAppCompatDialogFragment;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
 import com.wxl.apt_annotation.ApiEvent;
@@ -529,12 +531,14 @@ public class GainHttp {
      * @return ObservableTransformer
      */
     public <T> ObservableTransformer<T, T> defaultSchedulers(@NonNull LifecycleProvider lifecycleProvider, ApiEvent event) {
-        if (lifecycleProvider instanceof RxFragmentActivity) {
+        if (lifecycleProvider instanceof RxFragmentActivity || lifecycleProvider instanceof RxAppCompatActivity) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(converActivityEvent(event)));
-        } else if (lifecycleProvider instanceof RxFragment) {
+        } else if (lifecycleProvider instanceof RxFragment   ||
+                lifecycleProvider instanceof RxAppCompatDialogFragment
+                || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -553,12 +557,14 @@ public class GainHttp {
      * @return ObservableTransformer
      */
     public <T> ObservableTransformer<T, T> defaultSchedulers(@NonNull LifecycleProvider lifecycleProvider) {
-        if (lifecycleProvider instanceof RxFragmentActivity) {
+        if (lifecycleProvider instanceof RxFragmentActivity || lifecycleProvider instanceof RxAppCompatActivity) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .compose(lifecycleProvider.bindUntilEvent(Instance.option.event))
                     .observeOn(AndroidSchedulers.mainThread());
-        } else if (lifecycleProvider instanceof RxFragment) {
+        } else if (lifecycleProvider instanceof RxFragment  ||
+                lifecycleProvider instanceof RxAppCompatDialogFragment
+                || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .compose(lifecycleProvider.bindUntilEvent(Instance.option.fragmentEvent))
@@ -592,7 +598,7 @@ public class GainHttp {
      * @return ObservableTransformer
      */
     public <T> ObservableTransformer<T, T> defaultDialogSchedulers(@NonNull final LifecycleProvider lifecycleProvider, ApiEvent event) {
-        if (lifecycleProvider instanceof RxFragmentActivity) {
+        if (lifecycleProvider instanceof RxFragmentActivity || lifecycleProvider instanceof RxAppCompatActivity) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -601,7 +607,9 @@ public class GainHttp {
                     .doFinally((Action) () -> {
                         option().dismissLoading();
                     });
-        } else if (lifecycleProvider instanceof RxFragment) {
+        } else if (lifecycleProvider instanceof RxFragment ||
+                lifecycleProvider instanceof RxAppCompatDialogFragment
+         || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -686,7 +694,7 @@ public class GainHttp {
      * @return ObservableTransformer
      */
     public <T> ObservableTransformer<T, T> defaultDialogSchedulers(@NonNull final LifecycleProvider lifecycleProvider) {
-        if (lifecycleProvider instanceof RxFragmentActivity) {
+        if (lifecycleProvider instanceof RxFragmentActivity || lifecycleProvider instanceof RxAppCompatActivity) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -695,7 +703,9 @@ public class GainHttp {
                     .doFinally((Action) () -> {
                         option().dismissLoading();
                     });
-        } else if (lifecycleProvider instanceof RxFragment) {
+        } else if (lifecycleProvider instanceof RxFragment  ||
+                lifecycleProvider instanceof RxAppCompatDialogFragment
+                || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
