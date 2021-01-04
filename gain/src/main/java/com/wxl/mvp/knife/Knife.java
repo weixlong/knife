@@ -81,7 +81,7 @@ public class Knife {
             }
             boolean syncTargetKeys = KnifeContainer.getInstance().isContainsSyncTargetKeys();
             if (isAuto || syncTargetKeys) {
-                startSyncFindTargetChild(target, callback);
+                startSyncFindTargetChild(target, isAuto,callback);
             }
         }
     }
@@ -89,7 +89,7 @@ public class Knife {
     /**
      * 开始异步解析被关联的对象
      */
-    private static void startSyncFindTargetChild(Object target, OnGainAttachFinishCallback callback) {
+    private static void startSyncFindTargetChild(Object target,boolean isAuto, OnGainAttachFinishCallback callback) {
         Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) throws Exception {
@@ -106,6 +106,9 @@ public class Knife {
                     }
                 }
                 e.onNext(syncTargetKeys);
+                if(isAuto){
+                    e.onNext(target);
+                }
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -340,10 +343,9 @@ public class Knife {
         HashMap<String, Target> fieldTargets = KnifeContainer.getInstance().getFieldTargets(cls.getName());
         if (fieldTargets != null) {
             Object obj = KnifeContainer.getInstance().findObj(cls.getName());
-            Iterator<Map.Entry<String, Target>> iterator = fieldTargets.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Target> next = iterator.next();
-                Target target = next.getValue();
+            Object[] keySet = fieldTargets.keySet().toArray();
+            for (int i = keySet.length - 1; i >= 0; i--) {
+                Target target = fieldTargets.get((String)keySet[i]);
                 Object o = findFieldTarget(cls, target);
                 setFieldValue(cls, obj == null ? childObj : obj, target, o);
                 if (target.isLoadChild() && o != null) {
@@ -472,10 +474,9 @@ public class Knife {
         HashMap<String, Target> fieldTargets = KnifeContainer.getInstance().getFieldTargets(cls.getName());
         if (fieldTargets != null) {
             Object obj = KnifeContainer.getInstance().findObj(cls.getName());
-            Iterator<Map.Entry<String, Target>> iterator = fieldTargets.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Target> next = iterator.next();
-                Target target = next.getValue();
+            Object[] keySet = fieldTargets.keySet().toArray();
+            for (int length = 0; length < keySet.length; length++) {
+                Target target = fieldTargets.get((String)keySet[length]);
                 Object o = findFieldTarget(cls, target);
                 setFieldValue(cls, obj, target, o);
                 if (target.isLoadChild() && o != null) {

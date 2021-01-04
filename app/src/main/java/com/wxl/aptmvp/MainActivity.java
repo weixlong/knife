@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
         GainKnife.bindSync(this, new OnGainAttachFinishCallback() {
             @Override
             public void onSyncAttachFinish(Object target) {
-                Loog.methodE("onSyncAttachFinish : "+target.getClass().getName());
+                Loog.methodE(target.getClass().getName());
             }
         });
         Loog.methodE("end bind");
