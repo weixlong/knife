@@ -15,6 +15,7 @@ import com.wxl.mvp.GainKnife;
 import com.wxl.mvp.base.BaseActivity;
 import com.wxl.mvp.http.Callback;
 import com.wxl.mvp.http.GainHttp;
+import com.wxl.mvp.lifecycle.OnGainAttachFinishCallback;
 import com.wxl.mvp.util.Loog;
 
 public class MainActivity extends BaseActivity {
@@ -30,7 +31,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreateBindViewBefore(@Nullable Bundle savedInstanceState) {
         Loog.methodE("start bind");
-        GainKnife.bind(this);
+        GainKnife.bindSync(this, new OnGainAttachFinishCallback() {
+            @Override
+            public void onSyncAttachFinish(Object target) {
+                Loog.methodE("onSyncAttachFinish : "+target.getClass().getName());
+            }
+        });
         Loog.methodE("end bind");
         //GainKnife.registerUnableConstructorTarget(new P(0));
     }

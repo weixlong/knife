@@ -19,7 +19,9 @@ public class KnifeContainer {
     private static HashMap<String, Target> unSupportConstructorContainer = new HashMap<>();
     private static HashMap<String, Object> registerObjectContainer = new HashMap<>();
     private static HashMap<String, List<Class>> registerRelatedPool = new HashMap<>();
-    private  Class mainClass = null;
+    private static HashMap<String, List<Object>> fieldContainerSyncTarget = new HashMap<>();
+    private static List<String> fieldContainerSyncKeys = new ArrayList<>();
+    private Class mainClass = null;
 
 
     private static class KC {
@@ -35,28 +37,76 @@ public class KnifeContainer {
 
     /**
      * 设置当前绑定的class
+     *
      * @param mainClass
      */
-    public void setMainClass(Class mainClass){
+    public void setMainClass(Class mainClass) {
         this.mainClass = mainClass;
     }
 
     /**
      * 添加关联class
+     *
      * @param
      * @param related
      */
-    public void addRelated(Class related){
-        if(mainClass == null) return;
-        if(!registerRelatedPool.containsKey(mainClass.getName())){
-            registerRelatedPool.put(mainClass.getName(),new ArrayList<>());
+    public void addRelated(Class related) {
+        if (mainClass == null) return;
+        if (!registerRelatedPool.containsKey(mainClass.getName())) {
+            registerRelatedPool.put(mainClass.getName(), new ArrayList<>());
         }
         List<Class> list = registerRelatedPool.get(mainClass.getName());
-        if(!list.contains(related)) {
+        if (!list.contains(related)) {
             list.add(related);
         }
     }
 
+
+    /**
+     * 添加异步对象
+     *
+     * @param target
+     */
+    public synchronized void addSyncTarget(Object target) {
+        if (mainClass == null) return;
+        boolean key = fieldContainerSyncTarget.containsKey(mainClass.getName());
+        if (!key) {
+            fieldContainerSyncTarget.put(mainClass.getName(), new ArrayList<>());
+        }
+        List<Object> objects = fieldContainerSyncTarget.get(mainClass.getName());
+        objects.add(target);
+        if(!fieldContainerSyncKeys.contains(mainClass.getName())) {
+            fieldContainerSyncKeys.add(mainClass.getName());
+        }
+    }
+
+
+    /**
+     * 获得异步对象列表
+     *
+     * @return
+     */
+    public List<Object> getSyncTarget(String key) {
+        if (TextUtils.isEmpty(key)) return null;
+        return fieldContainerSyncTarget.remove(key);
+    }
+
+    /**
+     * 是否还有值
+     * @return
+     */
+    public boolean isContainsSyncTargetKeys(){
+        return CollectionUtils.isNotEmpty(fieldContainerSyncTarget);
+    }
+
+    /**
+     * 获得当前已经注册的异步keys
+     *
+     * @return
+     */
+    public List<String> getSyncTargetKeys() {
+        return fieldContainerSyncKeys;
+    }
 
     /**
      * 存注解在类上的生命周期注解
@@ -98,7 +148,7 @@ public class KnifeContainer {
             targets = new HashMap<>();
         }
         String[] split = target.getName().split("\\.");
-        targets.put(split[split.length-1], target);
+        targets.put(split[split.length - 1], target);
     }
 
     /**
@@ -139,7 +189,7 @@ public class KnifeContainer {
      */
     private String getNameKey(String name, String tag) {
         String[] split = name.split("\\.");
-        return split[split.length-1]+ tag;
+        return split[split.length - 1] + tag;
     }
 
     /**
@@ -186,20 +236,22 @@ public class KnifeContainer {
 
     /**
      * 找方法上的Lifecycle注解
+     *
      * @param name
      * @return
      */
-    public HashMap<String,Target> getMethodLifecycleLoader(String name){
-        return getContainer(name,"GainMLL");
+    public HashMap<String, Target> getMethodLifecycleLoader(String name) {
+        return getContainer(name, "GainMLL");
     }
 
     /**
      * 找类上的Lifecycle注解
+     *
      * @param name
      * @return
      */
-    public HashMap<String,Target> getTypeLifecycleLoader(String name){
-        return  getContainer(name, "GainTLL");
+    public HashMap<String, Target> getTypeLifecycleLoader(String name) {
+        return getContainer(name, "GainTLL");
     }
 
     /**
@@ -284,7 +336,7 @@ public class KnifeContainer {
         boolean re = registerObjectContainer.containsKey(name);
         if (re) {
             Object remove = registerObjectContainer.remove(name);
-            if(remove != null) {
+            if (remove != null) {
                 Knife.releaseGainClassKnife(remove);
             }
         }
@@ -297,17 +349,18 @@ public class KnifeContainer {
 
     /**
      * 移除改类下的所有关联
+     *
      * @param cls
      */
-    public void unRelated(String cls){
-        if(TextUtils.equals(cls,mainClass.getName())){
+    public void unRelated(String cls) {
+        if (TextUtils.equals(cls, mainClass.getName())) {
             mainClass = null;
         }
         boolean b = registerRelatedPool.containsKey(cls);
-        if(b){
+        if (b) {
             remove(cls);
             List<Class> list = registerRelatedPool.get(cls);
-            if(CollectionUtils.isNotEmpty(list)){
+            if (CollectionUtils.isNotEmpty(list)) {
                 for (Class aClass : list) {
                     remove(aClass.getName());
                 }
@@ -324,7 +377,7 @@ public class KnifeContainer {
         boolean b = unSupportConstructorContainer.containsKey(name);
         if (b) {
             Target remove = unSupportConstructorContainer.remove(name);
-            if(remove != null && remove.getTarget() != null){
+            if (remove != null && remove.getTarget() != null) {
                 Knife.releaseGainClassKnife(remove.getTarget());
             }
         }

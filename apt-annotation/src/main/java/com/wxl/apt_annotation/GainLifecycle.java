@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
  * subscribe : 注解方法上时 只针对http请求的生命周期，注解在类上时表示该类下使用的http请求生命周期都按照该注解结束，
  * 如类和方法同时注解，则会优先选择方法注解使用
  * 同一个类里面不能具有相同方法名且同时注解GainLifecycle ，否则只有第一个注解的方法生效
+ * 如子类中复写了该方法，则注解GainLifecycle不生效
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.METHOD,ElementType.TYPE})
