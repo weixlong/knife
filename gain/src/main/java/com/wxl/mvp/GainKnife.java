@@ -42,6 +42,7 @@ public class GainKnife {
      * 绑定一个Activity对象，如果当前Activity具有生命周期即实现了LifecycleProvider接口（如：RxAppCompatActivity）则会同时附带生命周期。
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(Activity target) {
@@ -53,6 +54,7 @@ public class GainKnife {
      * 绑定一个Activity对象，如果当前Activity具有生命周期即实现了LifecycleProvider接口（如：RxAppCompatActivity）则会同时附带生命周期。
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(Activity target,OnGainAttachFinishCallback callback) {
@@ -80,6 +82,7 @@ public class GainKnife {
      *
      * newInstance 在子线程
      *
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(Fragment target) {
@@ -93,6 +96,7 @@ public class GainKnife {
      *
      * newInstance 在子线程
      *
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(Fragment target,OnGainAttachFinishCallback callback) {
@@ -118,6 +122,7 @@ public class GainKnife {
      * 绑定一个Dialog对象，如果当前Dialog具有生命周期即实现了LifecycleProvider接口（如：RxDialog）则会同时附带生命周期。
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(Dialog target) {
@@ -129,6 +134,7 @@ public class GainKnife {
      * 绑定一个Dialog对象，如果当前Dialog具有生命周期即实现了LifecycleProvider接口（如：RxDialog）则会同时附带生命周期。
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(Dialog target,OnGainAttachFinishCallback callback) {
@@ -154,6 +160,7 @@ public class GainKnife {
      * 绑定一个PopupWindow对象，如果当前PopupWindow具有生命周期即实现了LifecycleProvider接口（如：RxPopupWindow）则会同时附带生命周期。
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(PopupWindow target) {
@@ -165,6 +172,7 @@ public class GainKnife {
      * 绑定一个PopupWindow对象，如果当前PopupWindow具有生命周期即实现了LifecycleProvider接口（如：RxPopupWindow）则会同时附带生命周期。
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target
      */
     public static void bindSync(PopupWindow target,OnGainAttachFinishCallback callback) {
@@ -193,6 +201,7 @@ public class GainKnife {
      * 当该对象具有生命周期能力时会同时附带生命周期
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param
      * @param target
      */
@@ -206,6 +215,7 @@ public class GainKnife {
      * 当该对象具有生命周期能力时会同时附带生命周期
      * 当有其他对象注解 Field 的 id 指向该对象时，则具有与该对象同样的生命周期能力
      * newInstance 在子线程
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param
      * @param target
      */
@@ -220,7 +230,7 @@ public class GainKnife {
      * 如：未通过bind方法绑定的 Activity,Fragment,Dialog,PopupWindow。
      * 或者带参构造类
      *
-     * @param target\
+     * @param target
      * @link bind
      */
     @Deprecated
@@ -251,6 +261,7 @@ public class GainKnife {
      *
      * newInstance 在子线程
      *
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param target 被注册对象
      * @param life   需要与哪个已经被初始化并注册，且具有生命周期能力的类同步被释放。
      * @link bind
@@ -295,6 +306,7 @@ public class GainKnife {
      *
      * newInstance 在子线程
      *
+     * 如同时在绑定多个对象时，不确保释放能否同步，请尽量避免同时异步绑定多个对象
      * @param targetCls 被注册对象
      * @link unBind
      */

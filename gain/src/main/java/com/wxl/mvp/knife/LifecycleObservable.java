@@ -607,7 +607,7 @@ public class LifecycleObservable {
             List<Lifecycle> baseLifecycles = lifecycles.remove(key);
             if (CollectionUtils.isNotEmpty(baseLifecycles)) {
                 if (isSync) {
-                    unAttachSyncLifecyce(baseLifecycles);
+                    unAttachSyncLifecycle(baseLifecycles);
                 } else {
                     for (int i = baseLifecycles.size() - 1; i >= 0; i--) {
                         Lifecycle lifecycle = baseLifecycles.get(i);
@@ -657,7 +657,7 @@ public class LifecycleObservable {
     }
 
 
-    private void unAttachSyncLifecyce(List<Lifecycle> baseLifecycles) {
+    private void unAttachSyncLifecycle(List<Lifecycle> baseLifecycles) {
         Observable.create(new ObservableOnSubscribe<Message>() {
             @Override
             public void subscribe(ObservableEmitter<Message> e) throws Exception {
