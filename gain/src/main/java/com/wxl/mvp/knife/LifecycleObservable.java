@@ -260,6 +260,16 @@ public class LifecycleObservable {
             addLifecycle(key, lifecycle);
         }
 
+        bindPopLifecycleEvent(key, observable);
+    }
+
+
+    /**
+     * 绑定pop生命周期
+     * @param key
+     * @param observable
+     */
+    private void bindPopLifecycleEvent(Class key, Observable<PopupWindowEvent> observable){
         if (lifecycleDisposables.containsKey(key)) return;
         lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PopupWindowEvent>() {
@@ -340,7 +350,17 @@ public class LifecycleObservable {
             addLifecycle(key, lifecycle);
         }
 
+        bindDialogLifecycleEvent(key, observable);
 
+    }
+
+
+    /**
+     * 绑定dialog生命周期
+     * @param key
+     * @param observable
+     */
+    private void bindDialogLifecycleEvent(Class key,Observable<DialogEvent> observable){
         if (lifecycleDisposables.containsKey(key)) return;
         lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DialogEvent>() {
@@ -436,7 +456,16 @@ public class LifecycleObservable {
             addLifecycle(key, lifecycle);
         }
 
+        bindActivityLifecycleEvent(key,observable);
 
+    }
+
+    /**
+     * 绑定activity生命周期
+     * @param key
+     * @param observable
+     */
+    private void bindActivityLifecycleEvent(Class key,Observable<ActivityEvent> observable){
         if (lifecycleDisposables.containsKey(key)) return;
         lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ActivityEvent>() {
@@ -465,7 +494,6 @@ public class LifecycleObservable {
                     }
                 }));
     }
-
 
     /**
      * 执行activity被绑定过的生命周期
@@ -524,6 +552,17 @@ public class LifecycleObservable {
             addLifecycle(key, lifecycle);
         }
 
+        bindFragmentLifecycleEvent(key,observable);
+    }
+
+
+    /**
+     * 绑定fragment生命周期
+     *
+     * @param key
+     * @param observable
+     */
+    private void bindFragmentLifecycleEvent(Class key, Observable<FragmentEvent> observable) {
         if (lifecycleDisposables.containsKey(key)) return;
         lifecycleDisposables.put(key, observable.subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<FragmentEvent>() {
@@ -558,7 +597,12 @@ public class LifecycleObservable {
                 }));
     }
 
-
+    /**
+     * 执行异步fragment生命周期
+     *
+     * @param key
+     * @param lifecycle
+     */
     private void exeFragmentLifecycleEventSync(Class key, Lifecycle lifecycle) {
         List<FragmentEvent> events = lifecycleSyncFragment.get(key);
         if (CollectionUtils.isNotEmpty(events)) {
@@ -587,6 +631,12 @@ public class LifecycleObservable {
         }
     }
 
+
+    /**
+     * 添加生命周期到容器中
+     * @param key
+     * @param lifecycle
+     */
     private synchronized void addLifecycle(Class key, Lifecycle lifecycle) {
         lifecycleTags.add(lifecycle.getClass().getName());
         if (lifecycles.containsKey(key)) {
@@ -602,6 +652,12 @@ public class LifecycleObservable {
         }
     }
 
+
+    /**
+     * 解绑生命周期
+     * @param key
+     * @param isSync
+     */
     public void unAttachLifecycle(Class key, boolean isSync) {
         if (lifecycles.containsKey(key)) {
             List<Lifecycle> baseLifecycles = lifecycles.remove(key);
@@ -614,12 +670,17 @@ public class LifecycleObservable {
                         if (lifecycleTags.contains(lifecycle.getClass().getName())) {
                             lifecycleTags.remove(lifecycle.getClass().getName());
                         }
+                        //调用解绑回调
                         lifecycle.onGainDetach();
                     }
                     baseLifecycles.clear();
                 }
             }
         }
+
+        /**
+         * 解绑lifecycleDisposables
+         */
         if (lifecycleDisposables.containsKey(key)) {
             Disposable disposable = lifecycleDisposables.remove(key);
             if (disposable != null) {
@@ -627,6 +688,9 @@ public class LifecycleObservable {
             }
         }
 
+        /**
+         * 解绑lifecycleSyncPopup
+         */
         if (lifecycleSyncPopup.containsKey(key)) {
             List<PopupWindowEvent> popupWindowEvents = lifecycleSyncPopup.remove(key);
             if (CollectionUtils.isNotEmpty(popupWindowEvents)) {
@@ -634,6 +698,9 @@ public class LifecycleObservable {
             }
         }
 
+        /**
+         * 解绑lifecycleSyncDialog
+         */
         if (lifecycleSyncDialog.containsKey(key)) {
             List<DialogEvent> popupWindowEvents = lifecycleSyncDialog.remove(key);
             if (CollectionUtils.isNotEmpty(popupWindowEvents)) {
@@ -641,12 +708,19 @@ public class LifecycleObservable {
             }
         }
 
+        /**
+         * 解绑lifecycleSyncActivity
+         */
         if (lifecycleSyncActivity.containsKey(key)) {
             List<ActivityEvent> events = lifecycleSyncActivity.get(key);
             if (CollectionUtils.isNotEmpty(events)) {
                 events.clear();
             }
         }
+
+        /**
+         * 解绑lifecycleSyncFragment
+         */
         if (lifecycleSyncFragment.containsKey(key)) {
             List<FragmentEvent> events = lifecycleSyncFragment.get(key);
             if (CollectionUtils.isNotEmpty(events)) {
@@ -657,6 +731,10 @@ public class LifecycleObservable {
     }
 
 
+    /**
+     * 异步解除生命周期绑定
+     * @param baseLifecycles
+     */
     private void unAttachSyncLifecycle(List<Lifecycle> baseLifecycles) {
         Observable.create(new ObservableOnSubscribe<Message>() {
             @Override
@@ -689,7 +767,7 @@ public class LifecycleObservable {
 
                     @Override
                     public void onComplete() {
-
+                        baseLifecycles.clear();
                     }
                 });
 
