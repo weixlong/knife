@@ -24,7 +24,7 @@ public class C implements GainActivityLifecycle {
 
     @Override
     public void onStop() {
-        Loog.methodE("onPause");
+        Loog.methodE("onStop");
     }
 
     @Override

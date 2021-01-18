@@ -2,9 +2,6 @@ package com.wxl.mvp.knife;
 
 import com.wxl.mvp.util.Loog;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import io.reactivex.functions.Consumer;
 
 /**
@@ -38,7 +35,7 @@ public class MainTarget {
     }
 
     /**
-     * new object在主线程中
+     * new object
      */
     private class NewObjectMainThreadBean {
         private Consumer<Object> consumer;
@@ -47,7 +44,7 @@ public class MainTarget {
 
 
     /**
-     * 切换到子线程
+     *
      */
     private class ObjectInThread {
         private Consumer<Object> consumer;
@@ -55,8 +52,7 @@ public class MainTarget {
     }
 
     /**
-     * 切换到主线程new object
-     *
+     * new object
      * @param consumer
      * @param targetCls
      */
@@ -81,11 +77,9 @@ public class MainTarget {
 
 
     /**
-     * 切换回子线程继续下一步操作
-     *
+     * 继续下一步操作
      * @param bean
      */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void doNextObjectThread(ObjectInThread bean) {
         if (bean.target != null && bean.consumer != null) {
             try {
