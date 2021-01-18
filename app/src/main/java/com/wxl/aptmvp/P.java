@@ -24,7 +24,9 @@ public class P extends AP implements GainActivityLifecycle {
     @Override
     public void onResume() {
         Loog.methodE("onResume");
-        m.loadApk();
+        if(m != null) {
+            m.loadApk();
+        }
         loadConfig();
     }
 
