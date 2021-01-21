@@ -18,7 +18,7 @@ public class GainNote {
 
 
     private static Context context;
-    private static boolean debug = true;
+    private static boolean debug = false;
 
     /**
      * 初始化
@@ -44,10 +44,11 @@ public class GainNote {
      * @param debug 是否打开调试模式
      * @param lifecycle APP 前后台回调
      */
-    public static void init(Context context,boolean debug,AppLifecycle lifecycle,GainHttp.Option... option){
+    public static void init(Context context,boolean debug,AppLifecycle lifecycle,GainHttp.Option... options){
         GainNote.context = context;
-        addApplicationActivityCallback(lifecycle);
         GainNote.debug = debug;
+        buildGainHttpOptions(options);
+        addApplicationActivityCallback(lifecycle);
         Tu.initialize(context);
         XmlDB.initialize((Application) context.getApplicationContext());
     }
@@ -65,6 +66,19 @@ public class GainNote {
      */
     public static boolean isDebug() {
         return debug;
+    }
+
+
+    /**
+     * 构建GainHttpOption
+     * @param options
+     */
+    private static void buildGainHttpOptions(GainHttp.Option... options){
+        if(options != null && options.length > 0){
+            for (GainHttp.Option option : options) {
+                option.setDebug(debug).build();
+            }
+        }
     }
 
 

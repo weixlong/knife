@@ -263,6 +263,9 @@ public class GainHttp {
 
         private FragmentEvent fragmentEvent = FragmentEvent.DESTROY;
 
+
+        private boolean debug = GainNote.isDebug();
+
         private Option() {
             if (builder == null) {
                 builder = new OkHttpClient.Builder()
@@ -383,6 +386,17 @@ public class GainHttp {
             return this;
         }
 
+
+        /**
+         * 是否开启debug模式
+         * @param debug
+         * @return
+         */
+        public Option setDebug(boolean debug) {
+            this.debug = debug;
+            return this;
+        }
+
         /**
          * 创建retrofit
          *
@@ -392,7 +406,7 @@ public class GainHttp {
          * @return T
          */
         private <T> T createApi(Class<T> clazz, String baseUrl) {
-            if (GainNote.isDebug()) {
+            if (debug) {
                 builder.addInterceptor(new HttpLoggingInterceptor()
                         .setLevel(HttpLoggingInterceptor.Level.BODY));
             }
@@ -411,10 +425,9 @@ public class GainHttp {
         /**
          * 构建Retrofit
          */
-        public Option build() {
+        public void build() {
             Instance.api.put(apiClass, createApi(apiClass, BASE_URL));
             ExceptionHandler.exceptionCallback(exceptionCallback);
-            return this;
         }
 
 

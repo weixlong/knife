@@ -16,9 +16,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        GainNote.init(this, GainHttp.option().api(Api.class)
+        GainNote.init(this,true, GainHttp.option().api(Api.class)
                 .baseUrl("https://api.xuanjige.net")
-                .addInterceptor(new AccessTokenInterceptor())
-                .build());
+                .addInterceptor(new AccessTokenInterceptor()));
     }
 }
