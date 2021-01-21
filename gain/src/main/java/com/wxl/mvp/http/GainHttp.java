@@ -272,10 +272,6 @@ public class GainHttp {
                         .connectTimeout(HTTP_CONNECT_OUT_TIME, TimeUnit.SECONDS)
                         .writeTimeout(HTTP_CONNECT_OUT_TIME, TimeUnit.SECONDS)
                         .readTimeout(HTTP_CONNECT_OUT_TIME, TimeUnit.SECONDS);
-                if (GainNote.isDebug()) {
-                    builder.addInterceptor(new HttpLoggingInterceptor()
-                            .setLevel(HttpLoggingInterceptor.Level.BODY));
-                }
             }
         }
 
@@ -396,6 +392,10 @@ public class GainHttp {
          * @return T
          */
         private <T> T createApi(Class<T> clazz, String baseUrl) {
+            if (GainNote.isDebug()) {
+                builder.addInterceptor(new HttpLoggingInterceptor()
+                        .setLevel(HttpLoggingInterceptor.Level.BODY));
+            }
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .client(builder.build())
