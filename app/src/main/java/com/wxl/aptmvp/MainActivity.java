@@ -1,6 +1,8 @@
 package com.wxl.aptmvp;
 
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +15,7 @@ import com.wxl.apt_annotation.GainField;
 import com.wxl.aptmvp.api.AP;
 import com.wxl.mvp.GainKnife;
 import com.wxl.mvp.base.BaseActivity;
-import com.wxl.mvp.http.Callback;
+import com.wxl.mvp.http.DialogCallback;
 import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.lifecycle.OnGainAttachFinishCallback;
 import com.wxl.mvp.util.Loog;
@@ -53,7 +55,14 @@ public class MainActivity extends BaseActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GainHttp.load(api.loadConfig("Home.getConfig"), new Callback<String>() {
+                GainHttp.load(api.loadConfig("Home.getConfig"), new DialogCallback<String>() {
+
+                    @Override
+                    public Dialog getLoadingDialog(Context context) {
+                        Loog.methodE(context.getClass().getName());
+                        return new LoadingDialog(context);
+                    }
+
                     @Override
                     public void onSuccess(String s) {
                         textView.setText(s);

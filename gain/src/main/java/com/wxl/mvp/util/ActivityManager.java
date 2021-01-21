@@ -3,20 +3,20 @@ package com.wxl.mvp.util;
 import android.app.Activity;
 import android.content.Intent;
 
-
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.List;
 
 public class ActivityManager {
 
-    private static Stack<Activity> mActivityStack;    //Activity栈
+    private static List<Activity> mActivityStack;    //Activity栈
 
     private static class I {
         private static ActivityManager m = new ActivityManager();
     }
 
     private ActivityManager() {
-        mActivityStack = new Stack<>();
+        mActivityStack = new ArrayList<>();
     }
 
     public static ActivityManager getInstance() {
@@ -29,7 +29,7 @@ public class ActivityManager {
      * @param activity 添加的activity
      */
     public void pushActivity(Activity activity) {
-        mActivityStack.push(activity);
+        mActivityStack.add(activity);
     }
 
     /**
@@ -39,18 +39,18 @@ public class ActivityManager {
      */
     public Activity peekActivity() {
         if (mActivityStack != null && !mActivityStack.isEmpty()) {
-            return mActivityStack.peek();
+            return mActivityStack.get(mActivityStack.size()-1);
         } else {
             return null;
         }
     }
 
     /**
-     * 结束当前的activity,在activity的onDestroy中调用.
+     * 结束当前栈顶的activity,在activity的onDestroy中调用.
      */
     public void popActivity() {
         if (mActivityStack != null && !mActivityStack.isEmpty()) {
-            mActivityStack.pop();
+            mActivityStack.remove(mActivityStack.size()-1);
         }
     }
 
@@ -69,6 +69,7 @@ public class ActivityManager {
             if (activity != null && activity.getClass().equals(klass)) {
                 iterator.remove();   //注意这个地方
                 activity.finish();
+                break;
             }
         }
 
@@ -125,7 +126,7 @@ public class ActivityManager {
     public void popAllToActivity(Class<? extends Activity> aclass) {
         int size = mActivityStack.size();
         for (int i = 0; i < size; i++) {
-            Activity pop = mActivityStack.pop();
+            Activity pop = mActivityStack.get(i);
             if (pop != null) {
                 if (size - 1 == i) {
                     pop.startActivity(new Intent(pop, aclass));
@@ -137,10 +138,11 @@ public class ActivityManager {
 
     //移除所有的Activity
     public void removeAll() {
-        while (!mActivityStack.empty()) {
-            Activity activity = mActivityStack.pop();
-            if (activity != null) {
-                activity.finish();
+        int size = mActivityStack.size();
+        for (int i = 0; i < size; i++) {
+            Activity pop = mActivityStack.get(i);
+            if (pop != null && !pop.isFinishing()) {
+                pop.finish();
             }
         }
     }

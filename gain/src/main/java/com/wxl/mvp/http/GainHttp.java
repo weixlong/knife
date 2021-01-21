@@ -1,6 +1,7 @@
 package com.wxl.mvp.http;
 
 import android.app.Activity;
+import android.app.Dialog;
 
 import androidx.annotation.NonNull;
 
@@ -68,7 +69,6 @@ public class GainHttp {
     }
 
 
-
     /**
      * 默认执行
      *
@@ -77,10 +77,10 @@ public class GainHttp {
      */
     public static <T> void exe(Observable<T> observable, Callback<T> callback) {
         HttpLifecycleUser callClass = getCallClass();
-        if(callClass != null) {
+        if (callClass != null) {
             LifecycleBean lifecycleProvider = Knife.findHttpClassMethodLifecycleAnnotation(callClass);
             if (lifecycleProvider != null) {
-                exe(lifecycleProvider.getLifecycleProvider(), observable, callback,lifecycleProvider.getEvent());
+                exe(lifecycleProvider.getLifecycleProvider(), observable, callback, lifecycleProvider.getEvent());
             } else {
                 observable.compose(GainHttp.get().defaultSchedulers())
                         .subscribe(GainHttp.get().getSimpleSubscriber(callback));
@@ -100,7 +100,7 @@ public class GainHttp {
      */
     public static <T> void exe(Observable<T> observable, Callback<T> callback, ApiEvent event) {
         HttpLifecycleUser callClass = getCallClass();
-        if(callClass != null) {
+        if (callClass != null) {
             LifecycleBean lifecycleProvider = Knife.findHttpClassMethodLifecycleAnnotation(callClass);
             if (lifecycleProvider != null) {
                 exe(lifecycleProvider.getLifecycleProvider(), observable, callback, event);
@@ -158,16 +158,16 @@ public class GainHttp {
      */
     public static <T> void load(Observable<T> observable, Callback<T> callback) {
         HttpLifecycleUser callClass = getCallClass();
-        if(callClass != null) {
+        if (callClass != null) {
             LifecycleBean lifecycleProvider = Knife.findHttpClassMethodLifecycleAnnotation(callClass);
             if (lifecycleProvider != null) {
-                load(lifecycleProvider.getLifecycleProvider(), observable, callback,lifecycleProvider.getEvent());
+                load(lifecycleProvider.getLifecycleProvider(), observable, callback, lifecycleProvider.getEvent());
             } else {
-                observable.compose(GainHttp.get().defaultDialogSchedulers())
+                observable.compose(GainHttp.get().defaultDialogSchedulers(callback))
                         .subscribe(GainHttp.get().getSimpleSubscriber(callback));
             }
         } else {
-            observable.compose(GainHttp.get().defaultDialogSchedulers())
+            observable.compose(GainHttp.get().defaultDialogSchedulers(callback))
                     .subscribe(GainHttp.get().getSimpleSubscriber(callback));
         }
     }
@@ -182,16 +182,16 @@ public class GainHttp {
      */
     public static <T> void load(Observable<T> observable, Callback<T> callback, ApiEvent event) {
         HttpLifecycleUser callClass = getCallClass();
-        if(callClass != null) {
+        if (callClass != null) {
             LifecycleBean lifecycleProvider = Knife.findHttpClassMethodLifecycleAnnotation(callClass);
             if (lifecycleProvider != null) {
                 load(lifecycleProvider.getLifecycleProvider(), observable, callback, event);
             } else {
-                observable.compose(GainHttp.get().defaultDialogSchedulers())
+                observable.compose(GainHttp.get().defaultDialogSchedulers(callback))
                         .subscribe(GainHttp.get().getSimpleSubscriber(callback));
             }
         } else {
-            observable.compose(GainHttp.get().defaultDialogSchedulers())
+            observable.compose(GainHttp.get().defaultDialogSchedulers(callback))
                     .subscribe(GainHttp.get().getSimpleSubscriber(callback));
         }
     }
@@ -206,10 +206,10 @@ public class GainHttp {
      */
     public static <T> void load(LifecycleProvider lifecycleProvider, Observable<T> observable, Callback<T> callback) {
         if (lifecycleProvider != null) {
-            observable.compose(GainHttp.get().defaultDialogSchedulers(lifecycleProvider))
+            observable.compose(GainHttp.get().defaultDialogSchedulers(lifecycleProvider,callback))
                     .subscribe(GainHttp.get().getSimpleSubscriber(callback));
         } else {
-            observable.compose(GainHttp.get().defaultDialogSchedulers())
+            observable.compose(GainHttp.get().defaultDialogSchedulers(callback))
                     .subscribe(GainHttp.get().getSimpleSubscriber(callback));
         }
     }
@@ -224,14 +224,13 @@ public class GainHttp {
      */
     public static <T> void load(LifecycleProvider lifecycleProvider, Observable<T> observable, Callback<T> callback, ApiEvent event) {
         if (lifecycleProvider != null) {
-            observable.compose(GainHttp.get().defaultDialogSchedulers(lifecycleProvider, event))
+            observable.compose(GainHttp.get().defaultDialogSchedulers(lifecycleProvider,callback, event))
                     .subscribe(GainHttp.get().getSimpleSubscriber(callback));
         } else {
-            observable.compose(GainHttp.get().defaultDialogSchedulers())
+            observable.compose(GainHttp.get().defaultDialogSchedulers(callback))
                     .subscribe(GainHttp.get().getSimpleSubscriber(callback));
         }
     }
-
 
 
     /**
@@ -263,6 +262,7 @@ public class GainHttp {
 
         private FragmentEvent fragmentEvent = FragmentEvent.DESTROY;
 
+        private Dialog dialog = null;
 
         private boolean debug = GainNote.isDebug();
 
@@ -306,7 +306,7 @@ public class GainHttp {
          * @param interceptor
          * @return Option
          */
-        public Option addSmartInterceptor(Interceptor interceptor){
+        public Option addSmartInterceptor(Interceptor interceptor) {
             SmartView.option().addInterceptor(interceptor);
             return this;
         }
@@ -389,6 +389,7 @@ public class GainHttp {
 
         /**
          * 是否开启debug模式
+         *
          * @param debug
          * @return
          */
@@ -455,8 +456,6 @@ public class GainHttp {
                 popupView = null;
             }
         }
-
-
 
 
         /**
@@ -549,7 +548,7 @@ public class GainHttp {
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(converActivityEvent(event)));
-        } else if (lifecycleProvider instanceof RxFragment   ||
+        } else if (lifecycleProvider instanceof RxFragment ||
                 lifecycleProvider instanceof RxAppCompatDialogFragment
                 || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
@@ -557,7 +556,7 @@ public class GainHttp {
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(converFragmentEvent(event)));
         }
-        return  observable -> observable
+        return observable -> observable
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(lifecycleProvider.bindUntilEvent(event));
@@ -575,7 +574,7 @@ public class GainHttp {
                     .subscribeOn(Schedulers.newThread())
                     .compose(lifecycleProvider.bindUntilEvent(Instance.option.event))
                     .observeOn(AndroidSchedulers.mainThread());
-        } else if (lifecycleProvider instanceof RxFragment  ||
+        } else if (lifecycleProvider instanceof RxFragment ||
                 lifecycleProvider instanceof RxAppCompatDialogFragment
                 || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
@@ -591,15 +590,32 @@ public class GainHttp {
      *
      * @return ObservableTransformer
      */
-    public <T> ObservableTransformer<T, T> defaultDialogSchedulers() {
+    public <T> ObservableTransformer<T, T> defaultDialogSchedulers(Callback callback) {
+        if (callback instanceof DialogCallback) {
+            DialogCallback dialogCallback = (DialogCallback) callback;
+            option().dialog = dialogCallback.getLoadingDialog(ActivityLifecycleCallback.getCurrentActivity());
+        }
         return observable -> observable
                 .subscribeOn(Schedulers.newThread())
                 .doOnSubscribe(disposable -> {
-                    option().showLoading();
+                    if (callback instanceof DialogCallback) {
+                        if (option().dialog != null && !option().dialog.isShowing()) {
+                            option().dialog.show();
+                        }
+                    } else {
+                        option().showLoading();
+                    }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally((Action) () -> {
-                    option().dismissLoading();
+                    if (callback instanceof DialogCallback) {
+                        if (option().dialog != null && option().dialog.isShowing()) {
+                            option().dialog.dismiss();
+                            option().dialog = null;
+                        }
+                    } else {
+                        option().dismissLoading();
+                    }
                 });
     }
 
@@ -610,28 +626,62 @@ public class GainHttp {
      * @param lifecycleProvider
      * @return ObservableTransformer
      */
-    public <T> ObservableTransformer<T, T> defaultDialogSchedulers(@NonNull final LifecycleProvider lifecycleProvider, ApiEvent event) {
+    public <T> ObservableTransformer<T, T> defaultDialogSchedulers(@NonNull final LifecycleProvider lifecycleProvider, Callback callback, ApiEvent event) {
+        if (callback instanceof DialogCallback) {
+            DialogCallback dialogCallback = (DialogCallback) callback;
+            option().dialog = dialogCallback.getLoadingDialog(ActivityLifecycleCallback.getCurrentActivity());
+        }
+
         if (lifecycleProvider instanceof RxFragmentActivity || lifecycleProvider instanceof RxAppCompatActivity) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(converActivityEvent(event)))
-                    .doOnSubscribe((Consumer) disposable -> option().showLoading())
+                    .doOnSubscribe((Consumer) disposable -> {
+                                if (callback instanceof DialogCallback) {
+                                    if (option().dialog != null && !option().dialog.isShowing()) {
+                                        option().dialog.show();
+                                    }
+                                } else {
+                                    option().showLoading();
+                                }
+                            }
+                    )
                     .doFinally((Action) () -> {
-                        option().dismissLoading();
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && option().dialog.isShowing()) {
+                                option().dialog.dismiss();
+                                option().dialog = null;
+                            }
+                        } else {
+                            option().dismissLoading();
+                        }
                     });
         } else if (lifecycleProvider instanceof RxFragment ||
                 lifecycleProvider instanceof RxAppCompatDialogFragment
-         || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
+                || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(converFragmentEvent(event)))
                     .doOnSubscribe(disposable -> {
-                        option().showLoading();
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && !option().dialog.isShowing()) {
+                                option().dialog.show();
+                            }
+                        } else {
+                            option().showLoading();
+                        }
                     })
                     .doFinally((Action) () -> {
-                        option().dismissLoading();
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && option().dialog.isShowing()) {
+                                option().dialog.dismiss();
+                                option().dialog = null;
+                            }
+                        } else {
+                            option().dismissLoading();
+                        }
                     });
         }
         return observable -> observable
@@ -639,23 +689,34 @@ public class GainHttp {
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(lifecycleProvider.bindUntilEvent(event))
                 .doOnSubscribe(disposable -> {
-                    option().showLoading();
+                    if (callback instanceof DialogCallback) {
+                        if (option().dialog != null && !option().dialog.isShowing()) {
+                            option().dialog.show();
+                        }
+                    } else {
+                        option().showLoading();
+                    }
                 })
                 .doFinally((Action) () -> {
-                    option().dismissLoading();
+                    if (callback instanceof DialogCallback) {
+                        if (option().dialog != null && option().dialog.isShowing()) {
+                            option().dialog.dismiss();
+                            option().dialog = null;
+                        }
+                    } else {
+                        option().dismissLoading();
+                    }
                 });
     }
 
 
-
-
-
     /**
      * 转为ActivityEvent
+     *
      * @param event
      * @return
      */
-    private ActivityEvent converActivityEvent(ApiEvent event){
+    private ActivityEvent converActivityEvent(ApiEvent event) {
         switch (event) {
             case START:
                 return ActivityEvent.START;
@@ -675,10 +736,11 @@ public class GainHttp {
 
     /**
      * 转为FragmentEvent
+     *
      * @param event
      * @return
      */
-    private FragmentEvent converFragmentEvent(ApiEvent event){
+    private FragmentEvent converFragmentEvent(ApiEvent event) {
         switch (event) {
             case START:
                 return FragmentEvent.START;
@@ -706,17 +768,37 @@ public class GainHttp {
      * @param lifecycleProvider
      * @return ObservableTransformer
      */
-    public <T> ObservableTransformer<T, T> defaultDialogSchedulers(@NonNull final LifecycleProvider lifecycleProvider) {
+    public <T> ObservableTransformer<T, T> defaultDialogSchedulers(@NonNull final LifecycleProvider lifecycleProvider,Callback callback) {
+        if (callback instanceof DialogCallback) {
+            DialogCallback dialogCallback = (DialogCallback) callback;
+            option().dialog = dialogCallback.getLoadingDialog(ActivityLifecycleCallback.getCurrentActivity());
+        }
+
         if (lifecycleProvider instanceof RxFragmentActivity || lifecycleProvider instanceof RxAppCompatActivity) {
             return observable -> observable
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(Instance.option.event))
-                    .doOnSubscribe((Consumer) disposable -> option().showLoading())
+                    .doOnSubscribe((Consumer) disposable -> {
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && !option().dialog.isShowing()) {
+                                option().dialog.show();
+                            }
+                        } else {
+                            option().showLoading();
+                        }
+                    })
                     .doFinally((Action) () -> {
-                        option().dismissLoading();
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && option().dialog.isShowing()) {
+                                option().dialog.dismiss();
+                                option().dialog = null;
+                            }
+                        } else {
+                            option().dismissLoading();
+                        }
                     });
-        } else if (lifecycleProvider instanceof RxFragment  ||
+        } else if (lifecycleProvider instanceof RxFragment ||
                 lifecycleProvider instanceof RxAppCompatDialogFragment
                 || lifecycleProvider instanceof com.trello.rxlifecycle2.components.RxFragment) {
             return observable -> observable
@@ -724,16 +806,27 @@ public class GainHttp {
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(lifecycleProvider.bindUntilEvent(Instance.option.fragmentEvent))
                     .doOnSubscribe(disposable -> {
-                        option().showLoading();
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && !option().dialog.isShowing()) {
+                                option().dialog.show();
+                            }
+                        } else {
+                            option().showLoading();
+                        }
                     })
                     .doFinally((Action) () -> {
-                        option().dismissLoading();
+                        if (callback instanceof DialogCallback) {
+                            if (option().dialog != null && option().dialog.isShowing()) {
+                                option().dialog.dismiss();
+                                option().dialog = null;
+                            }
+                        } else {
+                            option().dismissLoading();
+                        }
                     });
         }
-        return defaultDialogSchedulers();
+        return defaultDialogSchedulers(callback);
     }
-
-
 
 
     /**
@@ -746,7 +839,7 @@ public class GainHttp {
             StackTraceElement traceElement = ((new Exception()).getStackTrace())[2];
             String className = traceElement.getClassName();
             String methodName = traceElement.getMethodName();
-            HttpLifecycleUser user = new HttpLifecycleUser(Class.forName(className),methodName);
+            HttpLifecycleUser user = new HttpLifecycleUser(Class.forName(className), methodName);
             return user;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

@@ -27,7 +27,7 @@ public class P extends AP implements GainActivityLifecycle {
         if(m != null) {
             m.loadApk();
         }
-        loadConfig();
+        //loadConfig();
     }
 
 

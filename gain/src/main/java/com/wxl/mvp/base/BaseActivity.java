@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import com.wxl.mvp.event.SnackEvent;
-import com.wxl.mvp.util.ActivityManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,7 +37,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         View view = onCreateBindViewUpdate(onCreateBindViewLayoutId(savedInstanceState), savedInstanceState);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(view);
-        ActivityManager.getInstance().pushActivity(this);
         EventBus.getDefault().register(this);
         onCreateBindViewChanged(savedInstanceState);
     }
@@ -126,7 +124,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        ActivityManager.getInstance().popActivity(getClass());
     }
 
 

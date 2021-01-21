@@ -86,7 +86,7 @@ public class ActivityLifecycleCallback implements Application.ActivityLifecycleC
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-
+        ActivityLifecycleCallback.setCurrentActivity(activity);
     }
 
     @Override
