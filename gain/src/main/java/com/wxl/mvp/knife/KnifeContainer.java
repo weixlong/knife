@@ -353,7 +353,7 @@ public class KnifeContainer {
      * @param cls
      */
     public void unRelated(String cls) {
-        if (TextUtils.equals(cls, mainClass.getName())) {
+        if (mainClass != null && TextUtils.equals(cls, mainClass.getName())) {
             mainClass = null;
         }
         boolean b = registerRelatedPool.containsKey(cls);
