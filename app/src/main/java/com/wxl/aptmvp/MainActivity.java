@@ -33,6 +33,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreateBindViewBefore(@Nullable Bundle savedInstanceState) {
         Loog.methodE("start bind");
+        GainKnife.getPreArgs().setArgs(P.class,"getConfig");
         GainKnife.bindSync(this, new OnGainAttachFinishCallback() {
             @Override
             public void onSyncAttachFinish(Object target) {

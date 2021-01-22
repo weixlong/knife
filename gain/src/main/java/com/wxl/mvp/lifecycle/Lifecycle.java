@@ -6,6 +6,6 @@ package com.wxl.mvp.lifecycle;
  * subscribe :
  */
 public interface Lifecycle {
-    void onGainAttach();
+    void onGainAttach(Object[] args);
     void onGainDetach();
 }

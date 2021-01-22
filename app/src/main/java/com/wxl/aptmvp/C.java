@@ -27,8 +27,9 @@ public class C implements GainActivityLifecycle {
         Loog.methodE("onStop");
     }
 
+
     @Override
-    public void onGainAttach() {
+    public void onGainAttach(Object[] args) {
         Loog.methodE("onGainAttach");
     }
 

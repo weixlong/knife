@@ -37,6 +37,7 @@ public class TwoActivity extends BaseActivity {
     @Override
     protected void onCreateBindViewChanged(@Nullable Bundle savedInstanceState) {
         Loog.methodE("start bind");
+        GainKnife.getPreArgs().setArgs(PX.class,"Home.getConfig");
         GainKnife.bind(this);
         Loog.methodE("end bind");
         textView = findViewById(R.id.textView);

@@ -864,6 +864,7 @@ public class Knife {
      * @param target
      */
     public static void releaseGainClassKnife(Object target) {
+        GainAttachArgs.getInstance().clearAttachArgs(target.getClass());
         releaseGainField(target);
         releaseGainApi(target);
     }

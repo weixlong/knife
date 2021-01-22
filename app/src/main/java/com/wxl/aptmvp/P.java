@@ -42,9 +42,10 @@ public class P extends AP implements GainActivityLifecycle {
         Loog.methodE("onStop");
     }
 
+
     @Override
-    public void onGainAttach() {
-        Loog.methodE("onGainAttach");
+    public void onGainAttach(Object[] args) {
+        Loog.methodE("onGainAttach args : "+args[0]);
     }
 
     @Override

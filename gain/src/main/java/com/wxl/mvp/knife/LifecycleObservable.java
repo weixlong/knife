@@ -63,7 +63,7 @@ public class LifecycleObservable {
                         if (msg.obj instanceof SyncMsg) {
                             SyncMsg msgg = (SyncMsg) msg.obj;
                             Lifecycle lifecycle = msgg.lifecycle;
-                            lifecycle.onGainAttach();
+                            lifecycle.onGainAttach(GainAttachArgs.getInstance().getAttachArgs(lifecycle.getClass()));
                             addLifecycle(msgg.key, lifecycle);
                             exeLifecycleSync(msgg);
                         }
@@ -219,7 +219,7 @@ public class LifecycleObservable {
         if (isSync) {
             sendAttachMsg(key, lifecycle);
         } else {
-            lifecycle.onGainAttach();
+            lifecycle.onGainAttach(GainAttachArgs.getInstance().getAttachArgs(lifecycle.getClass()));
         }
 
     }
@@ -256,7 +256,7 @@ public class LifecycleObservable {
         if (isSync) {
             sendAttachMsg(key, lifecycle);
         } else {
-            lifecycle.onGainAttach();
+            lifecycle.onGainAttach(GainAttachArgs.getInstance().getAttachArgs(lifecycle.getClass()));
             addLifecycle(key, lifecycle);
         }
 
@@ -346,7 +346,7 @@ public class LifecycleObservable {
         if (isSync) {
             sendAttachMsg(key, lifecycle);
         } else {
-            lifecycle.onGainAttach();
+            lifecycle.onGainAttach(GainAttachArgs.getInstance().getAttachArgs(lifecycle.getClass()));
             addLifecycle(key, lifecycle);
         }
 
@@ -452,7 +452,7 @@ public class LifecycleObservable {
         if (isSync && isLoadAttach) {
             sendAttachMsg(key, lifecycle);
         } else if (isLoadAttach) {
-            lifecycle.onGainAttach();
+            lifecycle.onGainAttach(GainAttachArgs.getInstance().getAttachArgs(lifecycle.getClass()));
             addLifecycle(key, lifecycle);
         }
 
@@ -548,7 +548,7 @@ public class LifecycleObservable {
         if (isSync && isLoadAttach) {
             sendAttachMsg(key, lifecycle);
         } else if (isLoadAttach) {
-            lifecycle.onGainAttach();
+            lifecycle.onGainAttach(GainAttachArgs.getInstance().getAttachArgs(lifecycle.getClass()));
             addLifecycle(key, lifecycle);
         }
 

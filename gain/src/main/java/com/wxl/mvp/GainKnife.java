@@ -7,6 +7,7 @@ import android.widget.PopupWindow;
 import androidx.fragment.app.Fragment;
 
 import com.wxl.apt_annotation.GainLifecycle;
+import com.wxl.mvp.knife.GainAttachArgs;
 import com.wxl.mvp.knife.Knife;
 import com.wxl.mvp.knife.KnifeContainer;
 import com.wxl.mvp.knife.LifecycleObservable;
@@ -270,6 +271,14 @@ public class GainKnife {
     public static void registerUnableConstructorTargetSync(Object target, Class life) {
         if(target == null || life == null) return;
         Knife.findUnSupportConstructorGainForKeyWordTarget(target, life,true);
+    }
+
+    /**
+     * 获得参数预设句柄
+     * @return
+     */
+    public static GainAttachArgs getPreArgs(){
+        return GainAttachArgs.getInstance();
     }
 
     /**
