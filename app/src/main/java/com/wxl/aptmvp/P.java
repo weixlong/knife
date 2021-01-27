@@ -3,6 +3,7 @@ package com.wxl.aptmvp;
 import com.wxl.apt_annotation.GainField;
 import com.wxl.apt_annotation.GainLifecycle;
 import com.wxl.aptmvp.api.AP;
+import com.wxl.mvp.GainKnife;
 import com.wxl.mvp.lifecycle.GainActivityLifecycle;
 import com.wxl.mvp.util.Loog;
 
@@ -45,6 +46,7 @@ public class P extends AP implements GainActivityLifecycle {
 
     @Override
     public void onGainAttach(Object[] args) {
+        GainKnife.getPreArgs().setArgs(A.class,"this is pre args");
         Loog.methodE("onGainAttach args : "+args[0]);
     }
 

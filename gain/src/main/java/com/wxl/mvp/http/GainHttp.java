@@ -150,9 +150,7 @@ public class GainHttp {
 
 
     /**
-     * 默认执行,带对话框
-     * ActivityManager 里要设置当前的Activity
-     *
+     * 默认执行,带加载框
      * @param observable
      * @param callback
      */
@@ -174,9 +172,7 @@ public class GainHttp {
 
 
     /**
-     * 默认执行,带对话框
-     * ActivityManager 里要设置当前的Activity
-     *
+     * 默认执行,带加载框
      * @param observable
      * @param callback
      */
@@ -198,9 +194,7 @@ public class GainHttp {
 
 
     /**
-     * 默认执行,带对话框
-     * ActivityManager 里要设置当前的Activity
-     *
+     * 默认执行,带加载框
      * @param observable
      * @param callback
      */
@@ -216,9 +210,7 @@ public class GainHttp {
 
 
     /**
-     * 默认执行,带对话框
-     * ActivityManager 里要设置当前的Activity
-     *
+     * 默认执行,带加载框
      * @param observable
      * @param callback
      */

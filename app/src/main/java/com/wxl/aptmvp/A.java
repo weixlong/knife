@@ -27,7 +27,7 @@ public class A implements GainActivityLifecycle {
 
     @Override
     public void onGainAttach(Object[] args) {
-        Loog.methodE("onGainAttach");
+        Loog.methodE("onGainAttach : "+args[0]);
     }
 
     @Override
