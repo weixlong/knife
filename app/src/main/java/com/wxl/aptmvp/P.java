@@ -21,7 +21,6 @@ public class P extends AP implements GainActivityLifecycle {
     @GainField(target = B.class,life = MainActivity.class)
     B b;
 
-    @GainLifecycle(life = MainActivity.class)
     @Override
     public void onResume() {
         Loog.methodE("onResume");
