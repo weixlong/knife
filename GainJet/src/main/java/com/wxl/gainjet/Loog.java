@@ -1,11 +1,9 @@
-package com.wxl.mvp.util;
+package com.wxl.gainjet;
 
 import android.util.Log;
 
-import com.wxl.mvp.GainNote;
-
 /**
- * create file time : 2020/12/11
+ * create file time : 2021/1/29
  * create user : wxl
  * subscribe :
  */
@@ -13,7 +11,7 @@ public class Loog {
 
     private static final String TAG = Loog.class.getSimpleName();
 
-    public static final boolean TEST_DEBUG = false;
+    public static final boolean TEST_DEBUG = true;
 
     public static void d(String msg) {
         Log.d(TAG, msg);
@@ -21,7 +19,7 @@ public class Loog {
 
 
     public static void e(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - TAG.length();
             //大于4000时
             while (msg.length() > max_str_length) {
@@ -34,7 +32,7 @@ public class Loog {
     }
 
     public static void methodE(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
             String className = traceElement.getClassName();
             String methodName = traceElement.getMethodName();
@@ -50,7 +48,7 @@ public class Loog {
     }
 
     public static void methodI(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
             String className = traceElement.getClassName();
             String methodName = traceElement.getMethodName();
@@ -67,7 +65,7 @@ public class Loog {
 
 
     public static void methodV(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
             String className = traceElement.getClassName();
             String methodName = traceElement.getMethodName();
@@ -83,7 +81,7 @@ public class Loog {
     }
 
     public static void methodD(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             StackTraceElement traceElement = ((new Exception()).getStackTrace())[1];
             String className = traceElement.getClassName();
             String methodName = traceElement.getMethodName();
@@ -100,13 +98,13 @@ public class Loog {
 
 
     public static void expection(Exception e) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             e.printStackTrace();
         }
     }
 
     public static void i(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - TAG.length();
             //大于4000时
             while (msg.length() > max_str_length) {
@@ -119,7 +117,7 @@ public class Loog {
     }
 
     public static void v(String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - TAG.length();
             //大于4000时
             while (msg.length() > max_str_length) {
@@ -132,7 +130,7 @@ public class Loog {
     }
 
     public static void d(String tag, String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - tag.length();
             //大于4000时
             while (msg.length() > max_str_length) {
@@ -145,7 +143,7 @@ public class Loog {
     }
 
     public static void i(String tag, String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - tag.length();
             //大于4000时
             while (msg.length() > max_str_length) {
@@ -158,7 +156,7 @@ public class Loog {
     }
 
     public static void e(String tag, String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - tag.length();
             //大于4000时
             while (msg.length() > max_str_length) {
@@ -171,7 +169,7 @@ public class Loog {
     }
 
     public static void v(String tag, String msg) {
-        if (GainNote.isDebug()) {
+        if (TEST_DEBUG) {
             int max_str_length = 2001 - tag.length();
             //大于4000时
             while (msg.length() > max_str_length) {

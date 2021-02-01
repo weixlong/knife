@@ -3,7 +3,6 @@ package com.wxl.aptmvp;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -13,12 +12,16 @@ import androidx.annotation.Nullable;
 import com.wxl.apt_annotation.GainApi;
 import com.wxl.apt_annotation.GainField;
 import com.wxl.aptmvp.api.AP;
+import com.wxl.aptmvp.jet.MainPresenter;
+import com.wxl.aptmvp.jet.MainViewModel;
+import com.wxl.gainjet.Loog;
+import com.wxl.gainjet.PresenterFactory;
+import com.wxl.gainjet.ViewModelFactory;
 import com.wxl.mvp.GainKnife;
 import com.wxl.mvp.base.BaseActivity;
 import com.wxl.mvp.http.DialogCallback;
 import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.lifecycle.OnGainAttachFinishCallback;
-import com.wxl.mvp.util.Loog;
 
 public class MainActivity extends BaseActivity {
 
@@ -29,6 +32,8 @@ public class MainActivity extends BaseActivity {
     Api api;
 
     TextView textView;
+
+    private MainPresenter mainPresenter;
 
     @Override
     protected void onCreateBindViewBefore(@Nullable Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class MainActivity extends BaseActivity {
         });
         Loog.methodE("end bind");
         //GainKnife.registerUnableConstructorTarget(new P(0));
+
     }
 
     @Override
@@ -53,6 +59,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreateBindViewChanged(@Nullable Bundle savedInstanceState) {
         textView = findViewById(R.id.textView);
+        mainPresenter = PresenterFactory.create(this, MainPresenter.class,textView);
+
+        MainViewModel mainViewModel = ViewModelFactory.create(this, MainViewModel.class);
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +76,9 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(String s) {
-                        textView.setText(s);
-                        startActivity(new Intent(MainActivity.this, TwoActivity.class));
+                        mainViewModel.refresh(s);
+                       // textView.setText(s);
+                        //startActivity(new Intent(MainActivity.this, TwoActivity.class));
                     }
 
                     @Override

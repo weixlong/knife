@@ -3,6 +3,7 @@ package com.wxl.mvp.knife;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle2.LifecycleProvider;
+import com.wxl.gainjet.Loog;
 import com.wxl.mvp.GainKnife;
 import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.http.HttpLifecycleUser;
@@ -13,7 +14,6 @@ import com.wxl.mvp.lifecycle.GainPopLifecycle;
 import com.wxl.mvp.lifecycle.Lifecycle;
 import com.wxl.mvp.lifecycle.OnGainAttachFinishCallback;
 import com.wxl.mvp.util.CollectionUtils;
-import com.wxl.mvp.util.Loog;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

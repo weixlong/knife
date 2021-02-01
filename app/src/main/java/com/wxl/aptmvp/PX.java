@@ -2,7 +2,7 @@ package com.wxl.aptmvp;
 
 import com.wxl.apt_annotation.GainField;
 import com.wxl.aptmvp.api.AP;
-import com.wxl.mvp.util.Loog;
+import com.wxl.gainjet.Loog;
 
 /**
  * create file time : 2020/12/15

@@ -1,6 +1,7 @@
 package com.wxl.mvp.knife;
 
-import com.wxl.mvp.util.Loog;
+
+import com.wxl.gainjet.Loog;
 
 import io.reactivex.functions.Consumer;
 

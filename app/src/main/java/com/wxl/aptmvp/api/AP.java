@@ -11,10 +11,10 @@ import com.wxl.aptmvp.Api;
 import com.wxl.aptmvp.LoadingDialog;
 import com.wxl.aptmvp.M;
 import com.wxl.aptmvp.MainActivity;
+import com.wxl.gainjet.Loog;
 import com.wxl.mvp.http.DialogCallback;
 import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.lifecycle.GainActivityLifecycle;
-import com.wxl.mvp.util.Loog;
 
 /**
  * create file time : 2020/12/12

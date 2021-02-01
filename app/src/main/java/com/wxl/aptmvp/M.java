@@ -3,10 +3,10 @@ package com.wxl.aptmvp;
 import com.wxl.apt_annotation.ApiEvent;
 import com.wxl.apt_annotation.GainApi;
 import com.wxl.apt_annotation.GainLifecycle;
+import com.wxl.gainjet.Loog;
 import com.wxl.mvp.http.Callback;
 import com.wxl.mvp.http.GainHttp;
 import com.wxl.mvp.lifecycle.GainActivityLifecycle;
-import com.wxl.mvp.util.Loog;
 
 /**
  * create file time : 2020/10/12

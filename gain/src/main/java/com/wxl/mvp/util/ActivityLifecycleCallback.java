@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.wxl.gainjet.Loog;
 import com.wxl.mvp.lifecycle.AppLifecycle;
 
 import java.lang.ref.WeakReference;

@@ -1,8 +1,8 @@
 package com.wxl.aptmvp;
 
 import com.wxl.apt_annotation.GainField;
+import com.wxl.gainjet.Loog;
 import com.wxl.mvp.lifecycle.GainActivityLifecycle;
-import com.wxl.mvp.util.Loog;
 
 /**
  * create file time : 2021/1/4

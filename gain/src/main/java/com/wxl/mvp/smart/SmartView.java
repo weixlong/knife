@@ -15,6 +15,7 @@ import com.lzy.okgo.model.HttpParams;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.wxl.gainjet.Loog;
 import com.wxl.mvp.GainNote;
 import com.wxl.mvp.R;
 import com.wxl.mvp.http.GainHttp;
@@ -22,7 +23,6 @@ import com.wxl.mvp.http.exception.ExceptionHandler;
 import com.wxl.mvp.http.exception.UnKnowException;
 import com.wxl.mvp.http.trust.SSLSocketClient;
 import com.wxl.mvp.util.CollectionUtils;
-import com.wxl.mvp.util.Loog;
 
 import java.util.HashMap;
 import java.util.Iterator;
